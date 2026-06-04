@@ -64,13 +64,64 @@
         /* 控制面板 */
         #panel {
             position: fixed; top: 20px; left: 20px; z-index: 10;
-            background: rgba(10, 10, 16, 0.8);
+            background: rgba(10, 10, 16, 0.85);
             backdrop-filter: blur(20px);
-            padding: 20px; border-radius: 16px;
+            border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: white; width: 240px;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
-        h2 { font-size: 14px; color: #00f3ff; margin-bottom: 16px; letter-spacing: 2px; }
+
+        /* 面板头部 */
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .panel-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .panel-header h2 {
+            font-size: 14px;
+            color: #00f3ff;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+        .panel-toggle {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        .panel-toggle svg {
+            width: 16px;
+            height: 16px;
+            fill: #888;
+        }
+        #panel.collapsed .panel-toggle {
+            transform: rotate(180deg);
+        }
+
+        /* 面板内容 */
+        .panel-content {
+            padding: 0 20px 20px;
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
+            opacity: 1;
+        }
+        #panel.collapsed .panel-content {
+            max-height: 0;
+            padding: 0 20px;
+            opacity: 0;
+        }
+
         label { display: block; font-size: 11px; color: #888; margin-bottom: 8px; text-transform: uppercase; }
 
         /* 形状按钮 */
@@ -112,27 +163,90 @@
             cursor: pointer;
         }
 
+        /* 提示 */
+        .hint { margin-top: 12px; font-size: 10px; color: #555; line-height: 1.6; }
+
+        /* 摄像头预览容器 */
+        #webcam-container {
+            position: fixed; bottom: 20px; right: 20px; z-index: 5;
+            transition: all 0.3s ease;
+        }
+
+        /* 摄像头头部 */
+        .webcam-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: rgba(10, 10, 16, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 12px 12px 0 0;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-bottom: none;
+            cursor: pointer;
+            user-select: none;
+        }
+        .webcam-header:hover {
+            background: rgba(10, 10, 16, 0.95);
+        }
+        .webcam-header span {
+            font-size: 12px;
+            color: #888;
+        }
+        .webcam-toggle {
+            transition: transform 0.3s ease;
+        }
+        .webcam-toggle svg {
+            width: 14px; height: 14px;
+            fill: #888;
+        }
+        #webcam-container.collapsed .webcam-toggle {
+            transform: rotate(180deg);
+        }
+
         /* 摄像头预览 */
         #webcam-preview {
-            position: fixed; bottom: 20px; right: 20px;
             width: 160px; height: 120px;
-            border-radius: 12px;
-            border: 2px solid rgba(0,243,255,0.5);
-            opacity: 0.8; z-index: 5;
+            border-radius: 0 0 12px 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-top: none;
+            display: block;
+            transition: all 0.3s ease;
+            opacity: 0.85;
+        }
+        #webcam-container.collapsed #webcam-preview {
+            height: 0;
+            opacity: 0;
+            border: none;
         }
 
         /* 手势状态 */
         #gesture-status {
             position: fixed; bottom: 20px; left: 20px;
-            background: rgba(10, 10, 16, 0.8);
+            background: rgba(10, 10, 16, 0.85);
             backdrop-filter: blur(10px);
             padding: 10px 14px; border-radius: 10px;
             border: 1px solid rgba(255,255,255,0.1);
             color: white; font-size: 12px; z-index: 5;
         }
 
-        /* 提示 */
-        .hint { margin-top: 12px; font-size: 10px; color: #555; line-height: 1.6; }
+        /* 快捷键提示 */
+        .shortcuts {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 10, 16, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #666; font-size: 11px; z-index: 5;
+            display: flex; gap: 16px;
+        }
+        .shortcuts kbd {
+            background: rgba(255,255,255,0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #aaa;
+        }
     </style>
 </head>
 <body>
@@ -143,44 +257,58 @@
 
     <!-- 控制面板 -->
     <div id="panel">
-        <h2>✨ 粒子系统</h2>
-
-        <label>形态选择</label>
-        <div class="shape-grid">
-            <button class="shape-btn active" data-shape="galaxy"><span>🌌</span>银河</button>
-            <button class="shape-btn" data-shape="heart"><span>❤️</span>爱心</button>
-            <button class="shape-btn" data-shape="helix"><span>🧬</span>DNA</button>
-            <button class="shape-btn" data-shape="torus"><span>🍩</span>环结</button>
-            <button class="shape-btn" data-shape="butterfly"><span>🦋</span>蝴蝶</button>
-            <button class="shape-btn" data-shape="flower"><span>🌸</span>花朵</button>
-            <button class="shape-btn" data-shape="dragon"><span>🐉</span>神龙</button>
-            <button class="shape-btn" data-shape="saturn"><span>🪐</span>土星</button>
+        <div class="panel-header" onclick="togglePanel()">
+            <h2>✨ 粒子系统</h2>
+            <div class="panel-toggle">
+                <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+            </div>
         </div>
+        <div class="panel-content">
+            <label>形态选择</label>
+            <div class="shape-grid">
+                <button class="shape-btn active" data-shape="galaxy"><span>🌌</span>银河</button>
+                <button class="shape-btn" data-shape="heart"><span>❤️</span>爱心</button>
+                <button class="shape-btn" data-shape="helix"><span>🧬</span>DNA</button>
+                <button class="shape-btn" data-shape="torus"><span>🍩</span>环结</button>
+                <button class="shape-btn" data-shape="butterfly"><span>🦋</span>蝴蝶</button>
+                <button class="shape-btn" data-shape="flower"><span>🌸</span>花朵</button>
+                <button class="shape-btn" data-shape="dragon"><span>🐉</span>神龙</button>
+                <button class="shape-btn" data-shape="saturn"><span>🪐</span>土星</button>
+            </div>
 
-        <label>色彩主题</label>
-        <select id="color-scheme">
-            <option value="rainbow">🌈 幻彩霓虹</option>
-            <option value="cyberpunk">🤖 赛博朋克</option>
-            <option value="ocean">🌊 深海幽蓝</option>
-            <option value="fire">🔥 烈焰熔岩</option>
-            <option value="sakura">🌸 樱花飘落</option>
-            <option value="aurora">🌌 极光幻境</option>
-        </select>
+            <label>色彩主题</label>
+            <select id="color-scheme">
+                <option value="rainbow">🌈 幻彩霓虹</option>
+                <option value="cyberpunk">🤖 赛博朋克</option>
+                <option value="ocean">🌊 深海幽蓝</option>
+                <option value="fire">🔥 烈焰熔岩</option>
+                <option value="sakura">🌸 樱花飘落</option>
+                <option value="aurora">🌌 极光幻境</option>
+            </select>
 
-        <label>粒子大小</label>
-        <input type="range" id="particle-size" min="0.2" max="1.5" step="0.1" value="0.5">
+            <label>粒子大小</label>
+            <input type="range" id="particle-size" min="0.2" max="1.5" step="0.1" value="0.5">
 
-        <div class="hint">
-            <span style="color:#00f3ff">手势控制:</span><br>
-            ✋ 五指张开 = 扩散放大<br>
-            👊 握拳 = 收拢缩小<br>
-            🤚 移动手掌 = 旋转
+            <div class="hint">
+                <span style="color:#00f3ff">手势控制:</span><br>
+                ✋ 五指张开 = 扩散放大<br>
+                👊 握拳 = 收拢缩小<br>
+                🤚 移动手掌 = 旋转
+            </div>
         </div>
     </div>
 
-    <!-- 摄像头 -->
+    <!-- 摄像头预览 -->
     <video id="input-video" style="display:none" playsinline></video>
-    <canvas id="webcam-preview"></canvas>
+    <div id="webcam-container">
+        <div class="webcam-header" onclick="toggleWebcam()">
+            <span>📷 手部检测</span>
+            <div class="webcam-toggle">
+                <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+            </div>
+        </div>
+        <canvas id="webcam-preview"></canvas>
+    </div>
 
     <!-- 加载提示 -->
     <div id="loading-notice" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:100;background:rgba(10,10,16,0.95);padding:32px 48px;border-radius:16px;border:1px solid rgba(0,243,255,0.3);text-align:center;color:white;">
@@ -198,6 +326,14 @@
         <span id="gesture-text">等待手势...</span>
     </div>
 
+    <!-- 快捷键提示 -->
+    <div class="shortcuts">
+        <span><kbd>H</kbd> 隐藏面板</span>
+        <span><kbd>C</kbd> 隐藏摄像头</span>
+        <span><kbd>1-8</kbd> 切换形态</span>
+        <span><kbd>F</kbd> 全屏</span>
+    </div>
+
     <!-- Three.js -->
     <script type="importmap">
         {
@@ -207,8 +343,8 @@
             }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/hands.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1675466862/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1675466862/camera_utils.js"></script>
 
     <script type="module">
         import * as THREE from 'three';
@@ -236,6 +372,50 @@
         const videoEl = document.getElementById('input-video');
         const previewCanvas = document.getElementById('webcam-preview');
         const previewCtx = previewCanvas.getContext('2d');
+
+        // ===== 折叠功能 =====
+        window.togglePanel = function() {
+            const panel = document.getElementById('panel');
+            panel.classList.toggle('collapsed');
+        }
+
+        window.toggleWebcam = function() {
+            const container = document.getElementById('webcam-container');
+            container.classList.toggle('collapsed');
+        }
+
+        // 快捷键
+        document.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+
+            // H 键 - 隐藏/显示面板
+            if (key === 'h') {
+                togglePanel();
+            }
+
+            // C 键 - 隐藏/显示摄像头
+            if (key === 'c') {
+                toggleWebcam();
+            }
+
+            // F 键 - 全屏
+            if (key === 'f') {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+
+            // 1-8 键 - 切换形态
+            if (key >= '1' && key <= '8') {
+                const shapeBtns = document.querySelectorAll('.shape-btn');
+                const idx = parseInt(key) - 1;
+                if (shapeBtns[idx]) {
+                    shapeBtns[idx].click();
+                }
+            }
+        });
 
         // ===== 初始化 Three.js =====
         function initThree() {
@@ -611,9 +791,8 @@
         }
 
         // ===== MediaPipe 手势 =====
-        // 使用原项目的算法：指尖到手掌中心的距离
         let lastGesture = 'unknown';
-        let gestureBuffer = []; // 手势缓冲区用于平滑
+        let gestureBuffer = [];
 
         function initMediaPipe() {
             previewCanvas.width = 320;
@@ -655,6 +834,11 @@
                 }).catch((err) => {
                     console.error('摄像头启动失败:', err);
                     document.getElementById('gesture-text').textContent = '摄像头启动失败';
+                    // 隐藏加载提示
+                    const loadingNotice = document.getElementById('loading-notice');
+                    if (loadingNotice) {
+                        loadingNotice.innerHTML = '<div style="font-size:32px;margin-bottom:16px;">❌</div><div style="font-size:16px;font-weight:600;margin-bottom:8px;">摄像头启动失败</div><div style="font-size:13px;color:#888;">请检查浏览器权限设置</div>';
+                    }
                 });
             } catch (err) {
                 console.error('MediaPipe 初始化失败:', err);
@@ -662,28 +846,25 @@
             }
         }
 
-        // 识别手势（原项目算法）
+        // 识别手势
         function recognizeGesture(lm) {
-            // 关键点
-            const wrist = lm[0];        // 手腕
-            const thumbTip = lm[4];     // 拇指尖
-            const indexTip = lm[8];     // 食指尖
-            const middleTip = lm[12];   // 中指尖
-            const ringTip = lm[16];     // 无名指尖
-            const pinkyTip = lm[20];    // 小指尖
+            const wrist = lm[0];
+            const thumbTip = lm[4];
+            const indexTip = lm[8];
+            const middleTip = lm[12];
+            const ringTip = lm[16];
+            const pinkyTip = lm[20];
 
-            const indexMcp = lm[5];     // 食指根
-            const middleMcp = lm[9];    // 中指根
-            const ringMcp = lm[13];     // 无名指根
-            const pinkyMcp = lm[17];    // 小指根
+            const indexMcp = lm[5];
+            const middleMcp = lm[9];
+            const ringMcp = lm[13];
+            const pinkyMcp = lm[17];
 
-            // 计算手掌中心（手腕和中指根的中点）
             const palmCenter = {
                 x: (wrist.x + middleMcp.x) / 2,
                 y: (wrist.y + middleMcp.y) / 2
             };
 
-            // 计算每个手指指尖到手掌中心的距离
             const fingers = [
                 { tip: thumbTip, mcp: lm[1] },
                 { tip: indexTip, mcp: indexMcp },
@@ -704,16 +885,14 @@
                 return distToPalm - mcpToPalm;
             });
 
-            // 计算平均距离
             const avgDistance = fingerDistances.reduce((sum, d) => sum + d, 0) / fingerDistances.length;
 
-            // 判断手势
             if (avgDistance < 0.12) {
-                return 'fist';  // 握拳 - 收拢
+                return 'fist';
             } else if (avgDistance > 0.2) {
-                return 'open';  // 张开 - 扩散
+                return 'open';
             } else {
-                return 'neutral'; // 中间状态
+                return 'neutral';
             }
         }
 
@@ -729,26 +908,20 @@
                 const lm = results.multiHandLandmarks[0];
                 const palmCenter = lm[9];
 
-                // 识别手势
                 const gesture = recognizeGesture(lm);
 
-                // 手势缓冲（防抖）
                 gestureBuffer.push(gesture);
                 if (gestureBuffer.length > 5) gestureBuffer.shift();
 
-                // 统计最近5帧的手势
                 const fistCount = gestureBuffer.filter(g => g === 'fist').length;
                 const openCount = gestureBuffer.filter(g => g === 'open').length;
 
-                // 确定最终手势（需要至少3帧一致）
                 let finalGesture = 'neutral';
                 if (fistCount >= 3) finalGesture = 'fist';
                 else if (openCount >= 3) finalGesture = 'open';
 
-                // 应用手势效果
                 switch (finalGesture) {
                     case 'fist':
-                        // 👊 握拳 - 收拢缩小
                         scalefactor = Math.max(0.3, scalefactor - 0.008);
                         interactionFactor = Math.max(0, interactionFactor - 0.02);
                         gestureIcon.textContent = '👊';
@@ -756,7 +929,6 @@
                         break;
 
                     case 'open':
-                        // ✋ 张开 - 扩散放大
                         scalefactor = Math.min(2.0, scalefactor + 0.008);
                         interactionFactor = Math.min(1, interactionFactor + 0.02);
                         gestureIcon.textContent = '✋';
@@ -764,7 +936,6 @@
                         break;
 
                     default:
-                        // 🤚 中性 - 缓慢恢复
                         interactionFactor *= 0.98;
                         scalefactor += (1 - scalefactor) * 0.01;
                         gestureIcon.textContent = '🤚';
@@ -773,7 +944,6 @@
 
                 lastGesture = finalGesture;
 
-                // 旋转控制
                 if (prevHandCenter) {
                     const dx = (palmCenter.x - prevHandCenter.x) * 2;
                     const dy = (palmCenter.y - prevHandCenter.y) * 2;
@@ -800,7 +970,6 @@
                     previewCtx.fill();
                 }
 
-                // 显示手势状态
                 previewCtx.font = '12px Arial';
                 previewCtx.fillStyle = finalGesture === 'fist' ? '#ff0055' : finalGesture === 'open' ? '#00ff88' : '#fff';
                 previewCtx.textAlign = 'center';
