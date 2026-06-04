@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手势粒子交互</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            overflow: hidden;
+            font-family: -apple-system, sans-serif;
+            background: radial-gradient(ellipse at center, #0a0a2e 0%, #000000 70%);
+        }
+        canvas { display: block; }
+
+        /* 背景装饰层 */
+        #bg-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0, 100, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(100, 0, 255, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(0, 200, 255, 0.04) 0%, transparent 60%);
+        }
+        #bg-layer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image:
+                radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.2) 0%, transparent 100%),
+                radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.25) 0%, transparent 100%),
+                radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.15) 0%, transparent 100%),
+                radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.2) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 15% 75%, rgba(0,200,255,0.4) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 85% 25%, rgba(100,100,255,0.3) 0%, transparent 100%);
+            animation: twinkle 8s ease-in-out infinite alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        /* 网格背景 */
+        #grid-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(0, 150, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 150, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+        }
+
+        /* 控制面板 */
+        #panel {
+            position: fixed; top: 20px; left: 20px; z-index: 10;
+            background: rgba(10, 10, 16, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 20px; border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white; width: 240px;
+        }
+        h2 { font-size: 14px; color: #00f3ff; margin-bottom: 16px; letter-spacing: 2px; }
+        label { display: block; font-size: 11px; color: #888; margin-bottom: 8px; text-transform: uppercase; }
+
+        /* 形状按钮 */
+        .shape-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 16px; }
+        .shape-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ccc; padding: 8px 4px;
+            border-radius: 8px; cursor: pointer;
+            font-size: 10px; text-align: center;
+            transition: all 0.2s;
+        }
+        .shape-btn span { display: block; font-size: 18px; margin-bottom: 2px; }
+        .shape-btn:hover { background: rgba(0, 243, 255, 0.2); }
+        .shape-btn.active { background: rgba(0, 243, 255, 0.4); border-color: #00f3ff; }
+
+        /* 下拉框 */
+        select {
+            width: 100%; padding: 8px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px; color: white;
+            outline: none; font-size: 12px;
+            margin-bottom: 16px;
+        }
+
+        /* 滑块 */
+        input[type="range"] {
+            width: 100%; height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px; height: 14px;
+            background: #00f3ff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* 摄像头预览 */
+        #webcam-preview {
+            position: fixed; bottom: 20px; right: 20px;
+            width: 160px; height: 120px;
+            border-radius: 12px;
+            border: 2px solid rgba(0,243,255,0.5);
+            opacity: 0.8; z-index: 5;
+        }
+
+        /* 手势状态 */
+        #gesture-status {
+            position: fixed; bottom: 20px; left: 20px;
+            background: rgba(10, 10, 16, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 10px 14px; border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white; font-size: 12px; z-index: 5;
+        }
+
+        /* 提示 */
+        .hint { margin-top: 12px; font-size: 10px; color: #555; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+    <!-- 背景层 -->
+    <div id="bg-layer"></div>
+    <div id="grid-bg"></div>
+
+    <!-- 控制面板 -->
+    <div id="panel">
+        <h2>✨ 粒子系统</h2>
+
+        <label>形态选择</label>
+        <div class="shape-grid">
+            <button class="shape-btn active" data-shape="galaxy"><span>🌌</span>银河</button>
+            <button class="shape-btn" data-shape="heart"><span>❤️</span>爱心</button>
+            <button class="shape-btn" data-shape="helix"><span>🧬</span>DNA</button>
+            <button class="shape-btn" data-shape="torus"><span>🍩</span>环结</button>
+            <button class="shape-btn" data-shape="butterfly"><span>🦋</span>蝴蝶</button>
+            <button class="shape-btn" data-shape="flower"><span>🌸</span>花朵</button>
+            <button class="shape-btn" data-shape="dragon"><span>🐉</span>神龙</button>
+            <button class="shape-btn" data-shape="saturn"><span>🪐</span>土星</button>
+        </div>
+
+        <label>色彩主题</label>
+        <select id="color-scheme">
+            <option value="rainbow">🌈 幻彩霓虹</option>
+            <option value="cyberpunk">🤖 赛博朋克</option>
+            <option value="ocean">🌊 深海幽蓝</option>
+            <option value="fire">🔥 烈焰熔岩</option>
+            <option value="sakura">🌸 樱花飘落</option>
+            <option value="aurora">🌌 极光幻境</option>
+        </select>
+
+        <label>粒子大小</label>
+        <input type="range" id="particle-size" min="0.2" max="1.5" step="0.1" value="0.5">
+
+        <div class="hint">
+            <span style="color:#00f3ff">手势控制:</span><br>
+            ✋ 五指张开 = 扩散放大<br>
+            👊 握拳 = 收拢缩小<br>
+            🤚 移动手掌 = 旋转
+        </div>
+    </div>
+
+    <!-- 摄像头 -->
+    <video id="input-video" style="display:none" playsinline></video>
+    <canvas id="webcam-preview"></canvas>
+
+    <!-- 手势状态 -->
+    <div id="gesture-status">
+        <span id="gesture-icon">🤚</span>
+        <span id="gesture-text">等待手势...</span>
+    </div>
+
+    <!-- Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        // ===== 配置 =====
+        const PARTICLE_COUNT = window.innerWidth < 768 ? 4000 : 8000;
+
+        // ===== 变量 =====
+        let scene, camera, renderer, composer, particles, geometry, material;
+        let targetPositions = [];
+        let scalefactor = 1;
+        let interactionFactor = 0;
+        let rotationFactor = { x: 0, y: 0 };
+        let prevHandCenter = null;
+        let smoothedInteraction = 0;
+        let smoothedRotation = { x: 0, y: 0 };
+
+        const shapes = {};
+        const colorSchemes = {};
+
+        const videoEl = document.getElementById('input-video');
+        const previewCanvas = document.getElementById('webcam-preview');
+        const previewCtx = previewCanvas.getContext('2d');
+
+        // ===== 初始化 Three.js =====
+        function initThree() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x050510, 0.0015);
+
+            // 创建星空背景
+            createStarField();
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+            camera.position.z = 50;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            document.body.appendChild(renderer.domElement);
+
+            // 后期处理
+            composer = new EffectComposer(renderer);
+            composer.addPass(new RenderPass(scene, camera));
+            composer.addPass(new UnrealBloomPass(
+                new THREE.Vector2(window.innerWidth, window.innerHeight),
+                0.4, 0.4, 0.85
+            ));
+
+            // 控制器
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 0.5;
+
+            createParticles();
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                composer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            animate();
+        }
+
+        // ===== 创建星空背景 =====
+        function createStarField() {
+            const starCount = 1500;
+            const starGeometry = new THREE.BufferGeometry();
+            const starPositions = new Float32Array(starCount * 3);
+            const starColors = new Float32Array(starCount * 3);
+
+            for (let i = 0; i < starCount; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(Math.random() * 2 - 1);
+                const r = 200 + Math.random() * 500;
+                starPositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+                starPositions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+                starPositions[i * 3 + 2] = r * Math.cos(phi);
+                const brightness = 0.3 + Math.random() * 0.7;
+                starColors[i * 3] = brightness * 0.8;
+                starColors[i * 3 + 1] = brightness * 0.85;
+                starColors[i * 3 + 2] = brightness;
+            }
+
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+            starGeometry.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
+
+            const starMaterial = new THREE.PointsMaterial({
+                size: 1.2,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.5,
+                sizeAttenuation: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            const starField = new THREE.Points(starGeometry, starMaterial);
+            starField.name = 'starField';
+            scene.add(starField);
+        }
+
+        // ===== 创建粒子 =====
+        function createParticles() {
+            geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(PARTICLE_COUNT * 3);
+            const colors = new Float32Array(PARTICLE_COUNT * 3);
+            const sizes = new Float32Array(PARTICLE_COUNT);
+
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 200;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 200;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+                colors[i * 3] = colors[i * 3 + 1] = colors[i * 3 + 2] = 1;
+                sizes[i] = Math.random() * 0.3 + 0.2;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+            // 着色器
+            material = new THREE.ShaderMaterial({
+                uniforms: { time: { value: 0 } },
+                vertexShader: `
+                    attribute float size;
+                    varying vec3 vColor;
+                    void main() {
+                        vColor = color;
+                        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                        gl_PointSize = size * 8.0 * (300.0 / -mvPosition.z);
+                        gl_Position = projectionMatrix * mvPosition;
+                    }
+                `,
+                fragmentShader: `
+                    varying vec3 vColor;
+                    void main() {
+                        float dist = length(gl_PointCoord - vec2(0.5));
+                        if (dist > 0.5) discard;
+                        float alpha = 1.0 - smoothstep(0.0, 0.5, dist);
+                        alpha *= alpha;
+                        float innerGlow = 1.0 - smoothstep(0.0, 0.25, dist);
+                        innerGlow = pow(innerGlow, 3.0);
+                        vec3 finalColor = vColor * (0.5 + innerGlow * 0.3);
+                        float finalAlpha = alpha * 0.4 + innerGlow * 0.2;
+                        gl_FragColor = vec4(min(finalColor, vec3(1.0)), min(finalAlpha, 0.8));
+                    }
+                `,
+                vertexColors: true,
+                transparent: true,
+                depthWrite: false
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            generateShapes();
+            generateColorSchemes();
+            targetPositions = shapes.galaxy;
+            applyColorScheme('rainbow');
+        }
+
+        // ===== 配色方案 =====
+        function generateColorSchemes() {
+            const hslToRgb = (h, s, l) => {
+                let r, g, b;
+                if (s === 0) { r = g = b = l; } else {
+                    const hue2rgb = (p, q, t) => {
+                        if (t < 0) t += 1; if (t > 1) t -= 1;
+                        if (t < 1/6) return p + (q - p) * 6 * t;
+                        if (t < 1/2) return q;
+                        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                        return p;
+                    };
+                    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                    const p = 2 * l - q;
+                    r = hue2rgb(p, q, h + 1/3);
+                    g = hue2rgb(p, q, h);
+                    b = hue2rgb(p, q, h - 1/3);
+                }
+                return [r, g, b];
+            };
+
+            // Rainbow
+            colorSchemes.rainbow = new Float32Array(PARTICLE_COUNT * 3);
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const rgb = hslToRgb(i / PARTICLE_COUNT, 0.85, 0.6);
+                colorSchemes.rainbow[i * 3] = rgb[0];
+                colorSchemes.rainbow[i * 3 + 1] = rgb[1];
+                colorSchemes.rainbow[i * 3 + 2] = rgb[2];
+            }
+
+            // Cyberpunk
+            colorSchemes.cyberpunk = new Float32Array(PARTICLE_COUNT * 3);
+            const cyberColors = [0x00f3ff, 0xff0055, 0x8800ff, 0x00ff88];
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const c = new THREE.Color(cyberColors[Math.floor(Math.random() * cyberColors.length)]);
+                colorSchemes.cyberpunk[i * 3] = c.r;
+                colorSchemes.cyberpunk[i * 3 + 1] = c.g;
+                colorSchemes.cyberpunk[i * 3 + 2] = c.b;
+            }
+
+            // Ocean
+            colorSchemes.ocean = new Float32Array(PARTICLE_COUNT * 3);
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const rgb = hslToRgb(0.55 + Math.random() * 0.15, 0.9, 0.3 + Math.random() * 0.4);
+                colorSchemes.ocean[i * 3] = rgb[0];
+                colorSchemes.ocean[i * 3 + 1] = rgb[1];
+                colorSchemes.ocean[i * 3 + 2] = rgb[2];
+            }
+
+            // Fire
+            colorSchemes.fire = new Float32Array(PARTICLE_COUNT * 3);
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const rgb = hslToRgb(Math.random() * 0.12, 1.0, 0.4 + Math.random() * 0.5);
+                colorSchemes.fire[i * 3] = rgb[0];
+                colorSchemes.fire[i * 3 + 1] = rgb[1];
+                colorSchemes.fire[i * 3 + 2] = rgb[2];
+            }
+
+            // Sakura
+            colorSchemes.sakura = new Float32Array(PARTICLE_COUNT * 3);
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const rgb = hslToRgb(0.9 + Math.random() * 0.1, 0.3 + Math.random() * 0.5, 0.6 + Math.random() * 0.3);
+                colorSchemes.sakura[i * 3] = rgb[0];
+                colorSchemes.sakura[i * 3 + 1] = rgb[1];
+                colorSchemes.sakura[i * 3 + 2] = rgb[2];
+            }
+
+            // Aurora
+            colorSchemes.aurora = new Float32Array(PARTICLE_COUNT * 3);
+            const auroraColors = [0x00ff88, 0x00f3ff, 0x8800ff, 0xff00ff];
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const c = new THREE.Color(auroraColors[Math.floor(Math.random() * auroraColors.length)]);
+                colorSchemes.aurora[i * 3] = c.r * (0.5 + Math.random() * 0.5);
+                colorSchemes.aurora[i * 3 + 1] = c.g * (0.5 + Math.random() * 0.5);
+                colorSchemes.aurora[i * 3 + 2] = c.b * (0.5 + Math.random() * 0.5);
+            }
+        }
+
+        function applyColorScheme(name) {
+            if (!geometry || !colorSchemes[name]) return;
+            const target = colorSchemes[name];
+            const current = geometry.attributes.color.array;
+            for (let i = 0; i < current.length; i++) current[i] = target[i];
+            geometry.attributes.color.needsUpdate = true;
+        }
+
+        // ===== 形状生成 =====
+        function generateShapes() {
+            // 银河
+            shapes.galaxy = new Float32Array(PARTICLE_COUNT * 3);
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const t = i / PARTICLE_COUNT;
+                const angle = t * Math.PI * 12;
+                const r = Math.pow(t, 0.7) * 35;
+                const armOffset = (i % 3) * (Math.PI * 2 / 3);
+                shapes.galaxy[i * 3] = r * Math.cos(angle + armOffset) + (Math.random() - 0.5) * 1.5;
+                shapes.galaxy[i * 3 + 1] = (Math.random() - 0.5) * (3 - t * 2);
+                shapes.galaxy[i * 3 + 2] = r * Math.sin(angle + armOffset) + (Math.random() - 0.5) * 1.5;
+            }
+
+            // 爱心
+            shapes.heart = new Float32Array(PARTICLE_COUNT * 3);
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const t = Math.random() * Math.PI * 2;
+                const x = 16 * Math.pow(Math.sin(t), 3);
+                const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+                shapes.heart[i * 3] = x * 0.8 + (Math.random() - 0.5) * 2;
+                shapes.heart[i * 3 + 1] = y * 0.8 + (Math.random() - 0.5) * 2;
+                shapes.heart[i * 3 + 2] = (Math.random() - 0.5) * 6;
+            }
+
+            // DNA
+            shapes.helix = new Float32Array(PARTICLE_COUNT * 3);
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const strand = i % 2 === 0 ? 0 : Math.PI;
+                const t = i / PARTICLE_COUNT;
+                const angle = t * Math.PI * 20 + strand;
+                shapes.helix[i * 3] = 8 * Math.cos(angle) + (Math.random() - 0.5) * 0.5;
+                shapes.helix[i * 3 + 1] = (t - 0.5) * 60 + (Math.random() - 0.5) * 0.5;
+                shapes.helix[i * 3 + 2] = 8 * Math.sin(angle) + (Math.random() - 0.5) * 0.5;
+            }
+
+            // 环结
+            shapes.torus = new Float32Array(PARTICLE_COUNT * 3);
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const t = (i / PARTICLE_COUNT) * Math.PI * 6;
+                const r = 12 + 2.5 * Math.cos(4 * t);
+                shapes.torus[i * 3] = r * Math.cos(3 * t) + (Math.random() - 0.5) * 1.5;
+                shapes.torus[i * 3 + 1] = r * Math.sin(3 * t) + (Math.random() - 0.5) * 1.5;
+                shapes.torus[i * 3 + 2] = 2.5 * Math.sin(4 * t) + (Math.random() - 0.5) * 1.5;
+            }
+
+            // 蝴蝶
+            shapes.butterfly = new Float32Array(PARTICLE_COUNT * 3);
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const t = Math.random() * Math.PI * 2;
+                const wing = i % 2 === 0 ? 1 : -1;
+                const r = Math.exp(Math.sin(t)) - 2 * Math.cos(4 * t) + Math.pow(Math.sin((2 * t - Math.PI) / 24), 5);
+                shapes.butterfly[i * 3] = r * Math.sin(t) * wing * 5 + (Math.random() - 0.5) * 2;
+                shapes.butterfly[i * 3 + 1] = r * Math.cos(t) * 5 + (Math.random() - 0.5) * 2;
+                shapes.butterfly[i * 3 + 2] = (Math.random() - 0.5) * 4;
+            }
+
+            // 花朵
+            shapes.flower = new Float32Array(PARTICLE_COUNT * 3);
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const u = Math.random() * Math.PI * 2;
+                const v = Math.random() * Math.PI;
+                const r = 15 * Math.cos(6 * u) * Math.sin(v);
+                shapes.flower[i * 3] = r * Math.cos(u);
+                shapes.flower[i * 3 + 1] = r * Math.sin(u);
+                shapes.flower[i * 3 + 2] = (Math.random() - 0.5) * 8;
+            }
+
+            // 神龙
+            shapes.dragon = new Float32Array(PARTICLE_COUNT * 3);
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const t = (i / PARTICLE_COUNT) * Math.PI * 8;
+                const spiral = t / (Math.PI * 8);
+                const r = 5 + spiral * 15;
+                shapes.dragon[i * 3] = r * Math.cos(t) + (Math.random() - 0.5) * (2 + spiral * 3);
+                shapes.dragon[i * 3 + 1] = (spiral - 0.5) * 30 + (Math.random() - 0.5) * (2 + spiral * 3);
+                shapes.dragon[i * 3 + 2] = r * Math.sin(t) + (Math.random() - 0.5) * (2 + spiral * 3);
+            }
+
+            // 土星
+            shapes.saturn = new Float32Array(PARTICLE_COUNT * 3);
+            const sphereCount = Math.floor(PARTICLE_COUNT * 0.5);
+            for (let i = 0; i < sphereCount; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(Math.random() * 2 - 1);
+                shapes.saturn[i * 3] = 7 * Math.sin(phi) * Math.cos(theta);
+                shapes.saturn[i * 3 + 1] = 7 * Math.sin(phi) * Math.sin(theta);
+                shapes.saturn[i * 3 + 2] = 7 * Math.cos(phi);
+            }
+            for (let i = sphereCount; i < PARTICLE_COUNT; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const r = 10 + Math.random() * 10;
+                const x = r * Math.cos(angle);
+                const y = (Math.random() - 0.5) * 0.8;
+                shapes.saturn[i * 3] = x * Math.cos(Math.PI / 6) - y * Math.sin(Math.PI / 6);
+                shapes.saturn[i * 3 + 1] = x * Math.sin(Math.PI / 6) + y * Math.cos(Math.PI / 6);
+                shapes.saturn[i * 3 + 2] = r * Math.sin(angle);
+            }
+        }
+
+        // ===== 动画循环 =====
+        function animate() {
+            requestAnimationFrame(animate);
+            if (!particles) return;
+
+            const positions = geometry.attributes.position.array;
+            const target = targetPositions;
+            const time = Date.now() * 0.001;
+            const smoothFactor = 0.06;
+            const gestureScale = scalefactor + interactionFactor * 2.0;
+            const spreadBase = interactionFactor * 1.5;
+
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const ix = i * 3;
+                let tx = target[ix] * gestureScale;
+                let ty = target[ix + 1] * gestureScale;
+                let tz = target[ix + 2] * gestureScale;
+
+                // 扩散噪声
+                if (interactionFactor > 0.05) {
+                    tx += Math.sin(time + i * 0.1) * spreadBase * 8;
+                    ty += Math.cos(time + i * 0.15) * spreadBase * 8;
+                    tz += Math.sin(time + i * 0.2) * spreadBase * 8;
+                }
+
+                positions[ix] += (tx - positions[ix]) * smoothFactor;
+                positions[ix + 1] += (ty - positions[ix + 1]) * smoothFactor;
+                positions[ix + 2] += (tz - positions[ix + 2]) * smoothFactor;
+            }
+
+            geometry.attributes.position.needsUpdate = true;
+            particles.rotation.y += 0.001 + rotationFactor.y * 0.02;
+            particles.rotation.x += rotationFactor.x * 0.02;
+
+            if (material.uniforms) material.uniforms.time.value = time;
+
+            // 缓慢旋转星空
+            const starField = scene.getObjectByName('starField');
+            if (starField) {
+                starField.rotation.y += 0.0001;
+                starField.rotation.x += 0.00005;
+            }
+
+            composer.render();
+        }
+
+        // ===== MediaPipe 手势 =====
+        // 使用原项目的算法：指尖到手掌中心的距离
+        let lastGesture = 'unknown';
+        let gestureBuffer = []; // 手势缓冲区用于平滑
+
+        function initMediaPipe() {
+            previewCanvas.width = 320;
+            previewCanvas.height = 240;
+
+            const hands = new Hands({
+                locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+            });
+            hands.setOptions({
+                maxNumHands: 1,
+                modelComplexity: 1,
+                minDetectionConfidence: 0.6,
+                minTrackingConfidence: 0.5
+            });
+            hands.onResults(onHandsResults);
+
+            const cam = new Camera(videoEl, {
+                onFrame: async () => await hands.send({ image: videoEl }),
+                width: 640, height: 480
+            });
+            cam.start().catch(() => {
+                document.getElementById('gesture-text').textContent = '摄像头启动失败';
+            });
+        }
+
+        // 识别手势（原项目算法）
+        function recognizeGesture(lm) {
+            // 关键点
+            const wrist = lm[0];        // 手腕
+            const thumbTip = lm[4];     // 拇指尖
+            const indexTip = lm[8];     // 食指尖
+            const middleTip = lm[12];   // 中指尖
+            const ringTip = lm[16];     // 无名指尖
+            const pinkyTip = lm[20];    // 小指尖
+
+            const indexMcp = lm[5];     // 食指根
+            const middleMcp = lm[9];    // 中指根
+            const ringMcp = lm[13];     // 无名指根
+            const pinkyMcp = lm[17];    // 小指根
+
+            // 计算手掌中心（手腕和中指根的中点）
+            const palmCenter = {
+                x: (wrist.x + middleMcp.x) / 2,
+                y: (wrist.y + middleMcp.y) / 2
+            };
+
+            // 计算每个手指指尖到手掌中心的距离
+            const fingers = [
+                { tip: thumbTip, mcp: lm[1] },
+                { tip: indexTip, mcp: indexMcp },
+                { tip: middleTip, mcp: middleMcp },
+                { tip: ringTip, mcp: ringMcp },
+                { tip: pinkyTip, mcp: pinkyMcp }
+            ];
+
+            const fingerDistances = fingers.map(finger => {
+                const distToPalm = Math.hypot(
+                    finger.tip.x - palmCenter.x,
+                    finger.tip.y - palmCenter.y
+                );
+                const mcpToPalm = Math.hypot(
+                    finger.mcp.x - palmCenter.x,
+                    finger.mcp.y - palmCenter.y
+                );
+                return distToPalm - mcpToPalm;
+            });
+
+            // 计算平均距离
+            const avgDistance = fingerDistances.reduce((sum, d) => sum + d, 0) / fingerDistances.length;
+
+            // 判断手势
+            if (avgDistance < 0.12) {
+                return 'fist';  // 握拳 - 收拢
+            } else if (avgDistance > 0.2) {
+                return 'open';  // 张开 - 扩散
+            } else {
+                return 'neutral'; // 中间状态
+            }
+        }
+
+        function onHandsResults(results) {
+            previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+            previewCtx.fillStyle = '#0a0a0f';
+            previewCtx.fillRect(0, 0, previewCanvas.width, previewCanvas.height);
+
+            const gestureIcon = document.getElementById('gesture-icon');
+            const gestureText = document.getElementById('gesture-text');
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const lm = results.multiHandLandmarks[0];
+                const palmCenter = lm[9];
+
+                // 识别手势
+                const gesture = recognizeGesture(lm);
+
+                // 手势缓冲（防抖）
+                gestureBuffer.push(gesture);
+                if (gestureBuffer.length > 5) gestureBuffer.shift();
+
+                // 统计最近5帧的手势
+                const fistCount = gestureBuffer.filter(g => g === 'fist').length;
+                const openCount = gestureBuffer.filter(g => g === 'open').length;
+
+                // 确定最终手势（需要至少3帧一致）
+                let finalGesture = 'neutral';
+                if (fistCount >= 3) finalGesture = 'fist';
+                else if (openCount >= 3) finalGesture = 'open';
+
+                // 应用手势效果
+                switch (finalGesture) {
+                    case 'fist':
+                        // 👊 握拳 - 收拢缩小
+                        scalefactor = Math.max(0.3, scalefactor - 0.008);
+                        interactionFactor = Math.max(0, interactionFactor - 0.02);
+                        gestureIcon.textContent = '👊';
+                        gestureText.textContent = `收拢 ${(scalefactor * 100).toFixed(0)}%`;
+                        break;
+
+                    case 'open':
+                        // ✋ 张开 - 扩散放大
+                        scalefactor = Math.min(2.0, scalefactor + 0.008);
+                        interactionFactor = Math.min(1, interactionFactor + 0.02);
+                        gestureIcon.textContent = '✋';
+                        gestureText.textContent = `扩散 ${(interactionFactor * 100).toFixed(0)}%`;
+                        break;
+
+                    default:
+                        // 🤚 中性 - 缓慢恢复
+                        interactionFactor *= 0.98;
+                        scalefactor += (1 - scalefactor) * 0.01;
+                        gestureIcon.textContent = '🤚';
+                        gestureText.textContent = '准备中';
+                }
+
+                lastGesture = finalGesture;
+
+                // 旋转控制
+                if (prevHandCenter) {
+                    const dx = (palmCenter.x - prevHandCenter.x) * 2;
+                    const dy = (palmCenter.y - prevHandCenter.y) * 2;
+                    smoothedRotation.x += (dy - smoothedRotation.x) * 0.15;
+                    smoothedRotation.y += (dx - smoothedRotation.y) * 0.15;
+                }
+                prevHandCenter = { x: palmCenter.x, y: palmCenter.y };
+                rotationFactor = smoothedRotation;
+
+                // 绘制手部骨架
+                previewCtx.strokeStyle = 'rgba(0,243,255,0.7)';
+                previewCtx.lineWidth = 2;
+                const connections = [[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
+                for (const [a, b] of connections) {
+                    previewCtx.beginPath();
+                    previewCtx.moveTo(lm[a].x * previewCanvas.width, lm[a].y * previewCanvas.height);
+                    previewCtx.lineTo(lm[b].x * previewCanvas.width, lm[b].y * previewCanvas.height);
+                    previewCtx.stroke();
+                }
+                for (const p of lm) {
+                    previewCtx.beginPath();
+                    previewCtx.arc(p.x * previewCanvas.width, p.y * previewCanvas.height, 3, 0, Math.PI * 2);
+                    previewCtx.fillStyle = '#00f3ff';
+                    previewCtx.fill();
+                }
+
+                // 显示手势状态
+                previewCtx.font = '12px Arial';
+                previewCtx.fillStyle = finalGesture === 'fist' ? '#ff0055' : finalGesture === 'open' ? '#00ff88' : '#fff';
+                previewCtx.textAlign = 'center';
+                previewCtx.fillText(
+                    finalGesture === 'fist' ? '握拳' : finalGesture === 'open' ? '张开' : '准备',
+                    previewCanvas.width / 2, 20
+                );
+
+            } else {
+                interactionFactor *= 0.95;
+                rotationFactor.x *= 0.9;
+                rotationFactor.y *= 0.9;
+                scalefactor += (1 - scalefactor) * 0.02;
+                prevHandCenter = null;
+                gestureBuffer = [];
+                gestureIcon.textContent = '🔍';
+                gestureText.textContent = '等待手势...';
+            }
+        }
+
+        // ===== UI 事件 =====
+        document.querySelectorAll('.shape-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const key = btn.dataset.shape;
+                if (shapes[key]) targetPositions = shapes[key];
+            });
+        });
+
+        document.getElementById('color-scheme').addEventListener('change', (e) => applyColorScheme(e.target.value));
+
+        document.getElementById('particle-size').addEventListener('input', (e) => {
+            if (material) material.uniforms.size = { value: parseFloat(e.target.value) };
+        });
+
+        // ===== 启动 =====
+        initThree();
+        initMediaPipe();
+    </script>
+</body>
+</html>
