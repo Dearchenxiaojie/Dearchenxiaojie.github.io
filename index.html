@@ -11,246 +11,310 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#2563eb',
-                        secondary: '#10b981',
+                        bili: {
+                            pink: '#fb7299',
+                            blue: '#00a1d6',
+                        }
                     }
                 }
             }
         }
     </script>
     <style>
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-        .glass-effect {
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.8);
-        }
-        .dark .glass-effect {
-            background: rgba(17, 24, 39, 0.8);
-        }
+        body { background: #f4f4f4; }
+        .dark body { background: #171717; }
+        .bili-card { transition: transform 0.2s; }
+        .bili-card:hover { transform: translateY(-2px); }
+        .tab-active { color: #fb7299; border-bottom: 2px solid #fb7299; }
     </style>
 </head>
-<body class="bg-[#fafafa] text-[#1f2937] dark:bg-gray-900 dark:text-gray-100 min-h-screen flex flex-col">
+<body class="min-h-screen">
 
-    <!-- 导航栏 -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass-effect border-b border-gray-200 dark:border-gray-700">
-        <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-            <a href="index.html" class="text-xl font-semibold text-primary">Dearchenxiaojie</a>
+    <!-- 顶部导航 -->
+    <header class="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-14">
+                <a href="index.html" class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-bili-pink rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">D</span>
+                    </div>
+                    <span class="font-semibold text-lg hidden sm:block">Dearchenxiaojie</span>
+                </a>
 
-            <!-- 桌面端导航 -->
-            <div class="hidden md:flex items-center gap-6">
-                <a href="index.html" class="text-sm font-medium text-primary">首页</a>
-                <a href="archive.html" class="text-sm font-medium text-[#6b7280] hover:text-[#1f2937] dark:text-gray-400 dark:hover:text-gray-100">归档</a>
-                <a href="tags.html" class="text-sm font-medium text-[#6b7280] hover:text-[#1f2937] dark:text-gray-400 dark:hover:text-gray-100">标签</a>
-                <a href="about.html" class="text-sm font-medium text-[#6b7280] hover:text-[#1f2937] dark:text-gray-400 dark:hover:text-gray-100">关于</a>
-                <button id="theme-toggle" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
-                    <svg class="w-5 h-5 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
-                    </svg>
-                    <svg class="w-5 h-5 block dark:hidden" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                </button>
-            </div>
+                <div class="flex-1 max-w-xl mx-4">
+                    <div class="relative">
+                        <input type="text" placeholder="搜索文章..." class="w-full h-9 pl-4 pr-10 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:border-bili-blue">
+                        <button class="absolute right-1 top-1 w-7 h-7 rounded-full bg-bili-blue text-white flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </button>
+                    </div>
+                </div>
 
-            <!-- 移动端汉堡菜单 -->
-            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
-        </div>
-
-        <!-- 移动端菜单 -->
-        <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 dark:border-gray-700">
-            <div class="px-4 py-3 space-y-3">
-                <a href="index.html" class="block text-sm font-medium text-primary">首页</a>
-                <a href="archive.html" class="block text-sm font-medium text-[#6b7280]">归档</a>
-                <a href="tags.html" class="block text-sm font-medium text-[#6b7280]">标签</a>
-                <a href="about.html" class="block text-sm font-medium text-[#6b7280]">关于</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- 主内容 -->
-    <main class="flex-1 max-w-4xl mx-auto px-4 pt-24 pb-16 w-full">
-        <!-- 欢迎区域 -->
-        <header class="mb-12">
-            <h1 class="text-2xl font-semibold mb-2">👋 欢迎来到我的博客</h1>
-            <p class="text-[#6b7280] dark:text-gray-400">记录学习、分享技术、探索未知</p>
-        </header>
-
-        <!-- 搜索框 -->
-        <div class="mb-8">
-            <div class="relative">
-                <input type="text" id="search-input" placeholder="搜索文章..." class="w-full px-4 py-3 pl-10 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
-                <svg class="absolute left-3 top-3.5 w-4 h-4 text-[#6b7280]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
+                <div class="flex items-center gap-3">
+                    <a href="archive.html" class="text-sm text-gray-500 hover:text-bili-pink hidden sm:block">归档</a>
+                    <a href="tags.html" class="text-sm text-gray-500 hover:text-bili-pink hidden sm:block">标签</a>
+                    <a href="about.html" class="text-sm text-gray-500 hover:text-bili-pink hidden sm:block">关于</a>
+                    <button id="theme-toggle" class="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-center">
+                        <svg class="w-4 h-4 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path></svg>
+                        <svg class="w-4 h-4 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- 文章列表 -->
-        <div id="posts-container" class="space-y-6">
-            <!-- 文章卡片 1 -->
-            <article class="post-card bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow" data-tags="javascript,前端">
-                <a href="posts/hello-world.html" class="block">
-                    <h2 class="text-lg font-semibold mb-2 hover:text-primary transition-colors">Hello World - 我的第一篇博客</h2>
-                    <p class="text-sm text-[#6b7280] dark:text-gray-400 mb-3 line-clamp-2">终于搭建好了自己的个人博客！这篇文章记录了我搭建博客的过程，以及对未来的规划和期望。</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex gap-2">
-                            <span class="px-2 py-1 text-xs bg-primary/10 text-primary rounded-md">JavaScript</span>
-                            <span class="px-2 py-1 text-xs bg-primary/10 text-primary rounded-md">前端</span>
-                        </div>
-                        <time class="text-xs text-[#6b7280] dark:text-gray-500">2026-06-04</time>
-                    </div>
-                </a>
-            </article>
+        <!-- 分类标签 -->
+        <div class="max-w-7xl mx-auto px-4 border-t dark:border-gray-800">
+            <div class="flex items-center gap-6 h-10 overflow-x-auto">
+                <a href="index.html" class="text-sm font-medium tab-active whitespace-nowrap">推荐</a>
+                <a href="index.html" class="text-sm text-gray-500 hover:text-bili-pink whitespace-nowrap">JavaScript</a>
+                <a href="index.html" class="text-sm text-gray-500 hover:text-bili-pink whitespace-nowrap">Python</a>
+                <a href="index.html" class="text-sm text-gray-500 hover:text-bili-pink whitespace-nowrap">Git</a>
+                <a href="index.html" class="text-sm text-gray-500 hover:text-bili-pink whitespace-nowrap">WPF</a>
+                <a href="index.html" class="text-sm text-gray-500 hover:text-bili-pink whitespace-nowrap">GitHub</a>
+            </div>
+        </div>
+    </header>
 
-            <!-- 文章卡片 2 -->
-            <article class="post-card bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow" data-tags="github,工具">
-                <a href="posts/github-pages-guide.html" class="block">
-                    <h2 class="text-lg font-semibold mb-2 hover:text-primary transition-colors">GitHub Pages 免费搭建个人网站指南</h2>
-                    <p class="text-sm text-[#6b7280] dark:text-gray-400 mb-3 line-clamp-2">详细介绍如何使用 GitHub Pages 免费部署静态网站，包括自定义域名、HTTPS 配置等进阶技巧。</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex gap-2">
-                            <span class="px-2 py-1 text-xs bg-primary/10 text-primary rounded-md">GitHub</span>
-                            <span class="px-2 py-1 text-xs bg-primary/10 text-primary rounded-md">工具</span>
-                        </div>
-                        <time class="text-xs text-[#6b7280] dark:text-gray-500">2026-06-03</time>
-                    </div>
-                </a>
-            </article>
+    <!-- 主内容区 -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <div class="flex gap-6">
 
-            <!-- 文章卡片 3 -->
-            <article class="post-card bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow" data-tags="python,学习">
-                <a href="posts/python-tips.html" class="block">
-                    <h2 class="text-lg font-semibold mb-2 hover:text-primary transition-colors">Python 实用技巧分享</h2>
-                    <p class="text-sm text-[#6b7280] dark:text-gray-400 mb-3 line-clamp-2">整理了一些 Python 开发中的实用技巧，包括列表推导式、装饰器、上下文管理器等高级用法。</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex gap-2">
-                            <span class="px-2 py-1 text-xs bg-primary/10 text-primary rounded-md">Python</span>
-                            <span class="px-2 py-1 text-xs bg-primary/10 text-primary rounded-md">学习</span>
+            <!-- 左侧边栏 -->
+            <aside class="hidden lg:block w-48 flex-shrink-0">
+                <div class="sticky top-24 space-y-4">
+                    <!-- 个人信息卡 -->
+                    <div class="bg-white dark:bg-gray-900 rounded-xl p-4">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-bili-pink to-bili-blue flex items-center justify-center text-white font-bold" style="box-shadow:0 0 0 2px #fb7299">D</div>
+                            <div>
+                                <div class="font-semibold text-sm">Dearchenxiaojie</div>
+                                <div class="text-xs text-gray-400">计算机学生</div>
+                            </div>
                         </div>
-                        <time class="text-xs text-[#6b7280] dark:text-gray-500">2026-06-01</time>
+                        <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                            <div><div class="font-semibold">5</div><div class="text-gray-400">文章</div></div>
+                            <div><div class="font-semibold">6</div><div class="text-gray-400">标签</div></div>
+                            <div><div class="font-semibold">2</div><div class="text-gray-400">项目</div></div>
+                        </div>
                     </div>
-                </a>
-            </article>
 
-            <!-- 文章卡片 4 -->
-            <article class="post-card bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow" data-tags="wpf,c#,桌面开发">
-                <a href="posts/wpf-intro.html" class="block">
-                    <h2 class="text-lg font-semibold mb-2 hover:text-primary transition-colors">WPF 入门：从零开始构建桌面应用</h2>
-                    <p class="text-sm text-[#6b7280] dark:text-gray-400 mb-3 line-clamp-2">WPF 是微软推出的桌面应用程序开发框架，本文介绍 WPF 的基础概念和常用控件的使用方法。</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex gap-2">
-                            <span class="px-2 py-1 text-xs bg-primary/10 text-primary rounded-md">WPF</span>
-                            <span class="px-2 py-1 text-xs bg-primary/10 text-primary rounded-md">C#</span>
-                        </div>
-                        <time class="text-xs text-[#6b7280] dark:text-gray-500">2026-05-28</time>
+                    <!-- 分类导航 -->
+                    <div class="bg-white dark:bg-gray-900 rounded-xl p-3">
+                        <div class="text-xs text-gray-400 mb-2 px-2">分类</div>
+                        <nav class="space-y-0.5">
+                            <a href="index.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm bg-bili-pink/10 text-bili-pink font-medium">🏠 首页</a>
+                            <a href="archive.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-800">📅 归档</a>
+                            <a href="tags.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-800">🏷️ 标签</a>
+                            <a href="about.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-800">👤 关于</a>
+                        </nav>
                     </div>
-                </a>
-            </article>
+                </div>
+            </aside>
 
-            <!-- 文章卡片 5 -->
-            <article class="post-card bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow" data-tags="git,教程">
-                <a href="posts/git-basics.html" class="block">
-                    <h2 class="text-lg font-semibold mb-2 hover:text-primary transition-colors">Git 基础命令速查表</h2>
-                    <p class="text-sm text-[#6b7280] dark:text-gray-400 mb-3 line-clamp-2">整理了日常开发中最常用的 Git 命令，包括分支管理、代码提交、远程仓库操作等，方便快速查阅。</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex gap-2">
-                            <span class="px-2 py-1 text-xs bg-primary/10 text-primary rounded-md">Git</span>
-                            <span class="px-2 py-1 text-xs bg-primary/10 text-primary rounded-md">教程</span>
-                        </div>
-                        <time class="text-xs text-[#6b7280] dark:text-gray-500">2026-05-25</time>
+            <!-- 文章列表 -->
+            <div class="flex-1">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-base font-semibold">推荐文章</h2>
+                    <div class="flex items-center gap-2 text-xs text-gray-400">
+                        <span class="cursor-pointer hover:text-bili-pink">最新发布</span>
+                        <span>|</span>
+                        <span class="cursor-pointer hover:text-bili-pink">最多阅读</span>
                     </div>
-                </a>
-            </article>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <!-- 卡片 1 -->
+                    <article class="bili-card bg-white dark:bg-gray-900 rounded-xl overflow-hidden">
+                        <a href="posts/hello-world.html" class="block">
+                            <div class="aspect-video relative overflow-hidden bg-gray-100 dark:bg-gray-800">
+                                <img src="https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400&q=80" alt="" class="w-full h-full object-cover" loading="lazy">
+                                <span class="absolute top-2 left-2 px-2 py-0.5 text-xs bg-bili-pink text-white rounded">JavaScript</span>
+                                <span class="absolute bottom-2 right-2 px-2 py-0.5 text-xs bg-black/60 text-white rounded">5 分钟</span>
+                            </div>
+                            <div class="p-3">
+                                <h3 class="text-sm font-medium line-clamp-2 mb-2">Hello World - 我的第一篇博客</h3>
+                                <div class="flex items-center justify-between text-xs text-gray-400">
+                                    <div class="flex items-center gap-1">
+                                        <div class="w-4 h-4 rounded-full bg-bili-pink/20"></div>
+                                        <span>Dearchenxiaojie</span>
+                                    </div>
+                                    <span>2026-06-04</span>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+
+                    <!-- 卡片 2 -->
+                    <article class="bili-card bg-white dark:bg-gray-900 rounded-xl overflow-hidden">
+                        <a href="posts/github-pages-guide.html" class="block">
+                            <div class="aspect-video relative overflow-hidden bg-gray-100 dark:bg-gray-800">
+                                <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=400&q=80" alt="" class="w-full h-full object-cover" loading="lazy">
+                                <span class="absolute top-2 left-2 px-2 py-0.5 text-xs bg-bili-blue text-white rounded">GitHub</span>
+                                <span class="absolute bottom-2 right-2 px-2 py-0.5 text-xs bg-black/60 text-white rounded">8 分钟</span>
+                            </div>
+                            <div class="p-3">
+                                <h3 class="text-sm font-medium line-clamp-2 mb-2">GitHub Pages 免费搭建个人网站指南</h3>
+                                <div class="flex items-center justify-between text-xs text-gray-400">
+                                    <div class="flex items-center gap-1">
+                                        <div class="w-4 h-4 rounded-full bg-bili-pink/20"></div>
+                                        <span>Dearchenxiaojie</span>
+                                    </div>
+                                    <span>2026-06-03</span>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+
+                    <!-- 卡片 3 -->
+                    <article class="bili-card bg-white dark:bg-gray-900 rounded-xl overflow-hidden">
+                        <a href="posts/python-tips.html" class="block">
+                            <div class="aspect-video relative overflow-hidden bg-gray-100 dark:bg-gray-800">
+                                <img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400&q=80" alt="" class="w-full h-full object-cover" loading="lazy">
+                                <span class="absolute top-2 left-2 px-2 py-0.5 text-xs bg-yellow-500 text-white rounded">Python</span>
+                                <span class="absolute bottom-2 right-2 px-2 py-0.5 text-xs bg-black/60 text-white rounded">10 分钟</span>
+                            </div>
+                            <div class="p-3">
+                                <h3 class="text-sm font-medium line-clamp-2 mb-2">Python 实用技巧分享</h3>
+                                <div class="flex items-center justify-between text-xs text-gray-400">
+                                    <div class="flex items-center gap-1">
+                                        <div class="w-4 h-4 rounded-full bg-bili-pink/20"></div>
+                                        <span>Dearchenxiaojie</span>
+                                    </div>
+                                    <span>2026-06-01</span>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+
+                    <!-- 卡片 4 -->
+                    <article class="bili-card bg-white dark:bg-gray-900 rounded-xl overflow-hidden">
+                        <a href="posts/wpf-intro.html" class="block">
+                            <div class="aspect-video relative overflow-hidden bg-gray-100 dark:bg-gray-800">
+                                <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&q=80" alt="" class="w-full h-full object-cover" loading="lazy">
+                                <span class="absolute top-2 left-2 px-2 py-0.5 text-xs bg-purple-500 text-white rounded">WPF</span>
+                                <span class="absolute bottom-2 right-2 px-2 py-0.5 text-xs bg-black/60 text-white rounded">12 分钟</span>
+                            </div>
+                            <div class="p-3">
+                                <h3 class="text-sm font-medium line-clamp-2 mb-2">WPF 入门：从零开始构建桌面应用</h3>
+                                <div class="flex items-center justify-between text-xs text-gray-400">
+                                    <div class="flex items-center gap-1">
+                                        <div class="w-4 h-4 rounded-full bg-bili-pink/20"></div>
+                                        <span>Dearchenxiaojie</span>
+                                    </div>
+                                    <span>2026-05-28</span>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+
+                    <!-- 卡片 5 -->
+                    <article class="bili-card bg-white dark:bg-gray-900 rounded-xl overflow-hidden">
+                        <a href="posts/git-basics.html" class="block">
+                            <div class="aspect-video relative overflow-hidden bg-gray-100 dark:bg-gray-800">
+                                <img src="https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=400&q=80" alt="" class="w-full h-full object-cover" loading="lazy">
+                                <span class="absolute top-2 left-2 px-2 py-0.5 text-xs bg-orange-500 text-white rounded">Git</span>
+                                <span class="absolute bottom-2 right-2 px-2 py-0.5 text-xs bg-black/60 text-white rounded">6 分钟</span>
+                            </div>
+                            <div class="p-3">
+                                <h3 class="text-sm font-medium line-clamp-2 mb-2">Git 基础命令速查表</h3>
+                                <div class="flex items-center justify-between text-xs text-gray-400">
+                                    <div class="flex items-center gap-1">
+                                        <div class="w-4 h-4 rounded-full bg-bili-pink/20"></div>
+                                        <span>Dearchenxiaojie</span>
+                                    </div>
+                                    <span>2026-05-25</span>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+                </div>
+            </div>
+
+            <!-- 右侧边栏 -->
+            <aside class="hidden xl:block w-64 flex-shrink-0">
+                <div class="sticky top-24 space-y-4">
+                    <!-- 热门标签 -->
+                    <div class="bg-white dark:bg-gray-900 rounded-xl p-4">
+                        <div class="text-sm font-semibold mb-3">热门标签</div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 text-xs bg-bili-pink/10 text-bili-pink rounded-full cursor-pointer hover:bg-bili-pink/20">JavaScript</span>
+                            <span class="px-3 py-1 text-xs bg-bili-blue/10 text-bili-blue rounded-full cursor-pointer hover:bg-bili-blue/20">GitHub</span>
+                            <span class="px-3 py-1 text-xs bg-yellow-500/10 text-yellow-600 rounded-full cursor-pointer hover:bg-yellow-500/20">Python</span>
+                            <span class="px-3 py-1 text-xs bg-purple-500/10 text-purple-600 rounded-full cursor-pointer hover:bg-purple-500/20">WPF</span>
+                            <span class="px-3 py-1 text-xs bg-orange-500/10 text-orange-600 rounded-full cursor-pointer hover:bg-orange-500/20">Git</span>
+                        </div>
+                    </div>
+
+                    <!-- 推荐阅读 -->
+                    <div class="bg-white dark:bg-gray-900 rounded-xl p-4">
+                        <div class="text-sm font-semibold mb-3">推荐阅读</div>
+                        <div class="space-y-3">
+                            <a href="posts/hello-world.html" class="flex gap-3 group">
+                                <div class="w-20 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                                    <img src="https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=100&q=60" alt="" class="w-full h-full object-cover" loading="lazy">
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="text-xs font-medium line-clamp-2 group-hover:text-bili-pink">Hello World - 我的第一篇博客</h4>
+                                    <div class="text-xs text-gray-400 mt-1">2026-06-04</div>
+                                </div>
+                            </a>
+                            <a href="posts/github-pages-guide.html" class="flex gap-3 group">
+                                <div class="w-20 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                                    <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=100&q=60" alt="" class="w-full h-full object-cover" loading="lazy">
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="text-xs font-medium line-clamp-2 group-hover:text-bili-pink">GitHub Pages 免费搭建指南</h4>
+                                    <div class="text-xs text-gray-400 mt-1">2026-06-03</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 关于博主 -->
+                    <div class="bg-gradient-to-br from-bili-pink to-bili-blue rounded-xl p-4 text-white">
+                        <div class="text-sm font-semibold mb-2">关于博主</div>
+                        <p class="text-xs opacity-90 mb-3">热爱编程的计算机学生，喜欢探索新技术。</p>
+                        <a href="about.html" class="inline-flex items-center gap-1 text-xs font-medium bg-white/20 px-3 py-1.5 rounded-full hover:bg-white/30">了解更多 →</a>
+                    </div>
+                </div>
+            </aside>
         </div>
     </main>
 
     <!-- 页脚 -->
-    <footer class="border-t border-gray-200 dark:border-gray-700 py-8">
-        <div class="max-w-4xl mx-auto px-4 text-center">
-            <p class="text-sm text-[#6b7280] dark:text-gray-500">© 2026 Dearchenxiaojie. 用 ❤️ 构建</p>
-            <div class="mt-3 flex justify-center gap-4">
-                <a href="https://github.com/Dearchenxiaojie" target="_blank" class="text-[#6b7280] hover:text-[#1f2937] dark:text-gray-500 dark:hover:text-gray-100">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                </a>
-                <a href="mailto:2949536466@qq.com" class="text-[#6b7280] hover:text-[#1f2937] dark:text-gray-500 dark:hover:text-gray-100">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                    </svg>
-                </a>
+    <footer class="bg-white dark:bg-gray-900 border-t mt-8">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-bili-pink rounded flex items-center justify-center">
+                        <span class="text-white font-bold text-xs">D</span>
+                    </div>
+                    <span class="text-sm text-gray-400">© 2026 Dearchenxiaojie</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="https://github.com/Dearchenxiaojie" target="_blank" class="text-gray-400 hover:text-bili-pink">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    </a>
+                    <a href="mailto:2949536466@qq.com" class="text-gray-400 hover:text-bili-pink">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </a>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- 回到顶部按钮 -->
-    <button id="back-to-top" class="fixed bottom-6 right-6 p-3 bg-primary text-white rounded-full shadow-lg opacity-0 invisible transition-all hover:bg-blue-700">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-        </svg>
+    <!-- 回到顶部 -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 w-10 h-10 rounded-full bg-bili-pink text-white shadow-lg opacity-0 invisible transition-all hover:bg-bili-blue flex items-center justify-center">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
     </button>
 
     <script>
-        // 暗黑模式切换
-        const themeToggle = document.getElementById('theme-toggle');
         const html = document.documentElement;
-
-        // 检查本地存储或系统偏好
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            html.classList.add('dark');
-        }
-
-        themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
-        });
-
-        // 移动端菜单
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // 搜索功能
-        const searchInput = document.getElementById('search-input');
-        const postsContainer = document.getElementById('posts-container');
-        const posts = postsContainer.querySelectorAll('.post-card');
-
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            posts.forEach(post => {
-                const title = post.querySelector('h2').textContent.toLowerCase();
-                const desc = post.querySelector('p').textContent.toLowerCase();
-                const tags = post.dataset.tags || '';
-                const visible = title.includes(query) || desc.includes(query) || tags.includes(query);
-                post.style.display = visible ? 'block' : 'none';
-            });
-        });
-
-        // 回到顶部
-        const backToTop = document.getElementById('back-to-top');
-
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                backToTop.classList.remove('opacity-0', 'invisible');
-                backToTop.classList.add('opacity-100', 'visible');
-            } else {
-                backToTop.classList.remove('opacity-100', 'visible');
-                backToTop.classList.add('opacity-0', 'invisible');
-            }
-        });
-
-        backToTop.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) html.classList.add('dark');
+        document.getElementById('theme-toggle').addEventListener('click', () => { html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+        const btn = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => { if (window.scrollY > 300) { btn.classList.remove('opacity-0', 'invisible'); btn.classList.add('opacity-100', 'visible'); } else { btn.classList.remove('opacity-100', 'visible'); btn.classList.add('opacity-0', 'invisible'); } });
+        btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     </script>
 </body>
 </html>
