@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手势控制粒子系统 - 玩转 3D 交互 | Dearchenxiaojie</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bili: {
+                            pink: '#fb7299',
+                            blue: '#00a1d6',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: #f4f4f4; }
+        .dark body { background: #171717; }
+        .bili-card { transition: transform 0.2s; }
+        .bili-card:hover { transform: translateY(-2px); }
+
+        /* 文章内容样式 */
+        .article-content { line-height: 1.8; }
+        .article-content h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .dark .article-content h2 { border-color: #374151; }
+        .article-content p { margin-bottom: 16px; }
+        .article-content ul {
+            list-style-type: disc;
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+        .article-content li { margin-bottom: 8px; }
+        .article-content code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .dark .article-content code { background: #374151; }
+        .article-content pre {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 16px;
+        }
+        .article-content pre code { background: transparent; padding: 0; }
+
+        /* 特性卡片 */
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+        }
+        .dark .feature-card {
+            background: #1f2937;
+            border-color: #374151;
+        }
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        /* 演示按钮 */
+        .demo-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #fb7299, #00a1d6);
+            color: white;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(251, 114, 153, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- 顶部导航 -->
+    <header class="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="flex items-center justify-between h-14">
+                <a href="../index.html" class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-bili-pink rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">D</span>
+                    </div>
+                    <span class="font-semibold text-lg">Dearchenxiaojie</span>
+                </a>
+                <div class="flex items-center gap-4">
+                    <a href="../index.html" class="text-sm text-gray-500 hover:text-bili-pink">首页</a>
+                    <a href="../archive.html" class="text-sm text-gray-500 hover:text-bili-pink">归档</a>
+                    <a href="../about.html" class="text-sm text-gray-500 hover:text-bili-pink">关于</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 文章内容 -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <div class="flex gap-8">
+
+            <!-- 文章主体 -->
+            <article class="flex-1">
+                <!-- 面包屑 -->
+                <div class="text-sm text-gray-400 mb-6">
+                    <a href="../index.html" class="hover:text-bili-pink">首页</a>
+                    <span class="mx-2">›</span>
+                    <span>手势控制粒子系统</span>
+                </div>
+
+                <!-- 文章头图 -->
+                <div class="rounded-xl overflow-hidden mb-8 bg-gradient-to-br from-purple-900 to-blue-900 aspect-video flex items-center justify-center">
+                    <div class="text-center text-white">
+                        <div class="text-6xl mb-4">✨</div>
+                        <div class="text-2xl font-bold">手势控制粒子系统</div>
+                        <div class="text-sm opacity-75 mt-2">Three.js + MediaPipe Hands</div>
+                    </div>
+                </div>
+
+                <!-- 文章标题 -->
+                <h1 class="text-2xl font-bold mb-4">手势控制粒子系统 - 玩转 3D 交互</h1>
+                <div class="flex items-center gap-4 text-sm text-gray-400 mb-8">
+                    <time>2026-06-04</time>
+                    <span>·</span>
+                    <span>5 分钟阅读</span>
+                    <span>·</span>
+                    <span class="px-2 py-0.5 bg-bili-pink/10 text-bili-pink rounded text-xs">Three.js</span>
+                    <span class="px-2 py-0.5 bg-bili-blue/10 text-bili-blue rounded text-xs">交互</span>
+                </div>
+
+                <!-- 试玩按钮 -->
+                <div class="mb-8 p-6 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-xl border border-purple-500/20">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="font-semibold mb-1">🎮 在线体验</div>
+                            <div class="text-sm text-gray-400">需要摄像头权限，支持手势控制</div>
+                        </div>
+                        <a href="../particles.html" class="demo-btn">
+                            立即试玩 →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 文章正文 -->
+                <div class="article-content text-base">
+
+                    <p>这是一个基于 <strong>Three.js</strong> 和 <strong>MediaPipe Hands</strong> 的 3D 粒子交互系统。通过摄像头检测手势，可以实时控制粒子的形态和运动。</p>
+
+                    <h2>✨ 功能特性</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="feature-card">
+                            <div class="feature-icon bg-purple-100 dark:bg-purple-900/30">🌌</div>
+                            <div class="font-semibold mb-2">8 种粒子形态</div>
+                            <div class="text-sm text-gray-400">银河、爱心、DNA、环结、蝴蝶、花朵、神龙、土星</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon bg-blue-100 dark:bg-blue-900/30">🌈</div>
+                            <div class="font-semibold mb-2">6 种配色方案</div>
+                            <div class="text-sm text-gray-400">幻彩霓虹、赛博朋克、深海幽蓝、烈焰熔岩、樱花飘落、极光幻境</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon bg-green-100 dark:bg-green-900/30">✋</div>
+                            <div class="font-semibold mb-2">手势控制</div>
+                            <div class="text-sm text-gray-400">张开扩散、握拳收拢、移动旋转</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon bg-yellow-100 dark:bg-yellow-900/30">✨</div>
+                            <div class="font-semibold mb-2">视觉特效</div>
+                            <div class="text-sm text-gray-400">Bloom 泛光、星空背景、粒子发光</div>
+                        </div>
+                    </div>
+
+                    <h2>🖐️ 手势说明</h2>
+
+                    <table class="w-full mb-6">
+                        <thead>
+                            <tr class="border-b dark:border-gray-700">
+                                <th class="text-left py-3 px-4">手势</th>
+                                <th class="text-left py-3 px-4">效果</th>
+                                <th class="text-left py-3 px-4">说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b dark:border-gray-700">
+                                <td class="py-3 px-4">✋ 张开手掌</td>
+                                <td class="py-3 px-4">扩散放大</td>
+                                <td class="py-3 px-4 text-sm text-gray-400">五指张开，粒子向外扩散</td>
+                            </tr>
+                            <tr class="border-b dark:border-gray-700">
+                                <td class="py-3 px-4">👊 握拳</td>
+                                <td class="py-3 px-4">收拢缩小</td>
+                                <td class="py-3 px-4 text-sm text-gray-400">握紧拳头，粒子向中心聚拢</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4">🤚 移动手掌</td>
+                                <td class="py-3 px-4">旋转视角</td>
+                                <td class="py-3 px-4 text-sm text-gray-400">左右上下移动，旋转 3D 视角</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h2>🛠️ 技术栈</h2>
+
+                    <ul>
+                        <li><strong>Three.js</strong> - 3D 图形渲染引擎</li>
+                        <li><strong>MediaPipe Hands</strong> - Google 的手部追踪模型</li>
+                        <li><strong>WebGL</strong> - 硬件加速图形渲染</li>
+                        <li><strong>GLSL Shader</strong> - 自定义粒子着色器</li>
+                    </ul>
+
+                    <h2>📂 项目结构</h2>
+
+                    <pre><code>particles.html          # 主页面（单文件，可直接运行）
+├── Three.js            # 3D 渲染
+├── MediaPipe           # 手势识别
+├── Particle System     # 粒子系统
+└── UI Controls         # 控制面板</code></pre>
+
+                    <h2>🚀 如何使用</h2>
+
+                    <p>有两种方式体验：</p>
+
+                    <p><strong>方式一：在线体验（推荐）</strong></p>
+                    <p>直接访问 <a href="../particles.html" class="text-bili-blue hover:underline">在线演示页面</a>，允许摄像头权限即可。</p>
+
+                    <p><strong>方式二：本地运行</strong></p>
+                    <pre><code># 下载文件后，用本地服务器运行
+python -m http.server 8080
+
+# 然后访问 http://localhost:8080/particles.html</code></pre>
+
+                    <h2>💡 设计思路</h2>
+
+                    <p>这个项目的核心是<strong>实时手势识别</strong>与<strong>粒子系统</strong>的结合：</p>
+
+                    <ul>
+                        <li>使用 MediaPipe 检测手部 21 个关键点</li>
+                        <li>通过指尖到手掌中心的距离判断手势</li>
+                        <li>将手势数据映射到粒子系统的缩放和扩散参数</li>
+                        <li>使用 Three.js 的 BufferGeometry 高效渲染上万个粒子</li>
+                    </ul>
+
+                    <h2>📝 后续计划</h2>
+
+                    <ul>
+                        <li>添加更多粒子形态（音乐可视化等）</li>
+                        <li>支持双手手势控制</li>
+                        <li>添加粒子连线效果</li>
+                        <li>优化移动端体验</li>
+                    </ul>
+
+                </div>
+
+                <!-- 文章标签 -->
+                <div class="flex flex-wrap gap-2 mt-8 pt-6 border-t dark:border-gray-700">
+                    <span class="px-3 py-1 text-xs bg-bili-pink/10 text-bili-pink rounded-full">Three.js</span>
+                    <span class="px-3 py-1 text-xs bg-bili-blue/10 text-bili-blue rounded-full">MediaPipe</span>
+                    <span class="px-3 py-1 text-xs bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 rounded-full">WebGL</span>
+                    <span class="px-3 py-1 text-xs bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 rounded-full">交互设计</span>
+                </div>
+
+                <!-- 返回 -->
+                <div class="mt-8">
+                    <a href="../index.html" class="text-bili-blue hover:underline text-sm">← 返回首页</a>
+                </div>
+            </article>
+
+            <!-- 右侧边栏 -->
+            <aside class="hidden lg:block w-64 flex-shrink-0">
+                <div class="sticky top-20 space-y-4">
+
+                    <!-- 目录 -->
+                    <div class="bg-white dark:bg-gray-900 rounded-xl p-4">
+                        <div class="text-sm font-semibold mb-3">目录</div>
+                        <nav class="space-y-2 text-sm">
+                            <a href="#" class="block text-gray-400 hover:text-bili-pink">✨ 功能特性</a>
+                            <a href="#" class="block text-gray-400 hover:text-bili-pink">🖐️ 手势说明</a>
+                            <a href="#" class="block text-gray-400 hover:text-bili-pink">🛠️ 技术栈</a>
+                            <a href="#" class="block text-gray-400 hover:text-bili-pink">🚀 如何使用</a>
+                            <a href="#" class="block text-gray-400 hover:text-bili-pink">💡 设计思路</a>
+                        </nav>
+                    </div>
+
+                    <!-- 相关文章 -->
+                    <div class="bg-white dark:bg-gray-900 rounded-xl p-4">
+                        <div class="text-sm font-semibold mb-3">相关文章</div>
+                        <div class="space-y-3">
+                            <a href="hello-world.html" class="block text-sm text-gray-400 hover:text-bili-pink">Hello World - 第一篇博客</a>
+                            <a href="javascript:void(0)" class="block text-sm text-gray-400 hover:text-bili-pink">WebGL 入门教程</a>
+                        </div>
+                    </div>
+
+                    <!-- 试玩卡片 -->
+                    <div class="bg-gradient-to-br from-bili-pink to-bili-blue rounded-xl p-4 text-white">
+                        <div class="text-sm font-semibold mb-2">🎮 立即体验</div>
+                        <p class="text-xs opacity-90 mb-3">需要摄像头权限，支持手势控制粒子</p>
+                        <a href="../particles.html" class="inline-flex items-center gap-1 text-xs font-medium bg-white/20 px-3 py-1.5 rounded-full hover:bg-white/30">
+                            打开演示 →
+                        </a>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-white dark:bg-gray-900 border-t mt-8">
+        <div class="max-w-4xl mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-bili-pink rounded flex items-center justify-center">
+                        <span class="text-white font-bold text-xs">D</span>
+                    </div>
+                    <span class="text-sm text-gray-400">© 2026 Dearchenxiaojie</span>
+                </div>
+                <a href="https://github.com/Dearchenxiaojie" target="_blank" class="text-gray-400 hover:text-bili-pink">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 暗黑模式
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) html.classList.add('dark');
+    </script>
+</body>
+</html>
