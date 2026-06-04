@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git 基础命令速查表 | Dearchenxiaojie</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#2563eb', secondary: '#10b981' } } } }</script>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        .glass-effect { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.8); }
+        .dark .glass-effect { background: rgba(17, 24, 39, 0.8); }
+        .prose { line-height: 1.75; }
+        .prose h2 { font-size: 20px; font-weight: 600; margin-top: 32px; margin-bottom: 16px; }
+        .prose p { margin-bottom: 16px; }
+        .prose code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+        .dark .prose code { background: #374151; }
+        .prose pre { background: #1f2937; color: #e5e7eb; padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 16px; }
+        .prose pre code { background: transparent; padding: 0; }
+        .prose ul { list-style-type: disc; padding-left: 24px; margin-bottom: 16px; }
+        .prose li { margin-bottom: 8px; }
+        .prose table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        .prose th, .prose td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; }
+        .dark .prose th, .dark .prose td { border-color: #374151; }
+        .prose th { background: #f9fafb; font-weight: 600; }
+        .dark .prose th { background: #1f2937; }
+    </style>
+</head>
+<body class="bg-[#fafafa] text-[#1f2937] dark:bg-gray-900 dark:text-gray-100 min-h-screen flex flex-col">
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-effect border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="../index.html" class="text-xl font-semibold text-primary">Dearchenxiaojie</a>
+            <div class="hidden md:flex items-center gap-6">
+                <a href="../index.html" class="text-sm font-medium text-[#6b7280] hover:text-[#1f2937]">首页</a>
+                <a href="../archive.html" class="text-sm font-medium text-[#6b7280] hover:text-[#1f2937]">归档</a>
+                <a href="../tags.html" class="text-sm font-medium text-[#6b7280] hover:text-[#1f2937]">标签</a>
+                <a href="../about.html" class="text-sm font-medium text-[#6b7280] hover:text-[#1f2937]">关于</a>
+                <button id="theme-toggle" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <svg class="w-5 h-5 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path></svg>
+                    <svg class="w-5 h-5 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 max-w-[700px] mx-auto px-4 pt-24 pb-16 w-full">
+        <article>
+            <header class="mb-8">
+                <h1 class="text-2xl font-semibold mb-4">Git 基础命令速查表</h1>
+                <div class="flex items-center gap-4 text-sm text-[#6b7280]">
+                    <time>2026-05-25</time>
+                    <span>·</span>
+                    <span>6 分钟阅读</span>
+                </div>
+            </header>
+
+            <div class="prose text-base">
+                <p>Git 是目前最流行的版本控制系统，掌握常用命令是每个开发者的必备技能。本文整理了日常开发中最常用的 Git 命令。</p>
+
+                <h2>配置命令</h2>
+                <pre><code># 设置用户名和邮箱
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+
+# 查看配置
+git config --list</code></pre>
+
+                <h2>基础操作</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>命令</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>git init</code></td>
+                            <td>初始化新仓库</td>
+                        </tr>
+                        <tr>
+                            <td><code>git clone &lt;url&gt;</code></td>
+                            <td>克隆远程仓库</td>
+                        </tr>
+                        <tr>
+                            <td><code>git add .</code></td>
+                            <td>添加所有更改到暂存区</td>
+                        </tr>
+                        <tr>
+                            <td><code>git commit -m "msg"</code></td>
+                            <td>提交更改</td>
+                        </tr>
+                        <tr>
+                            <td><code>git push</code></td>
+                            <td>推送到远程仓库</td>
+                        </tr>
+                        <tr>
+                            <td><code>git pull</code></td>
+                            <td>拉取远程更新</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>分支操作</h2>
+                <pre><code># 查看分支
+git branch
+
+# 创建新分支
+git branch &lt;branch-name&gt;
+
+# 切换分支
+git checkout &lt;branch-name&gt;
+
+# 创建并切换到新分支
+git checkout -b &lt;branch-name&gt;
+
+# 合并分支
+git merge &lt;branch-name&gt;
+
+# 删除分支
+git branch -d &lt;branch-name&gt;</code></pre>
+
+                <h2>查看状态</h2>
+                <pre><code># 查看状态
+git status
+
+# 查看提交历史
+git log
+
+# 查看简洁历史
+git log --oneline
+
+# 查看差异
+git diff</code></pre>
+
+                <h2>撤销操作</h2>
+                <pre><code># 撤销工作区更改
+git checkout -- &lt;file&gt;
+
+# 撤销暂存区更改
+git reset HEAD &lt;file&gt;
+
+# 撤销最近一次提交
+git reset --soft HEAD~1</code></pre>
+
+                <p>这些是日常开发中最常用的 Git 命令。建议收藏本文，需要时快速查阅！</p>
+            </div>
+
+            <footer class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex flex-wrap gap-2">
+                    <a href="../tags.html#git" class="px-3 py-1 text-sm bg-primary/10 text-primary rounded-md hover:bg-primary/20">Git</a>
+                    <a href="../tags.html#教程" class="px-3 py-1 text-sm bg-primary/10 text-primary rounded-md hover:bg-primary/20">教程</a>
+                </div>
+            </footer>
+        </article>
+        <div class="mt-8"><a href="../index.html" class="text-primary hover:underline text-sm">← 返回首页</a></div>
+    </main>
+
+    <footer class="border-t border-gray-200 dark:border-gray-700 py-8">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <p class="text-sm text-[#6b7280]">© 2026 Dearchenxiaojie. 用 ❤️ 构建</p>
+        </div>
+    </footer>
+
+    <script>
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) html.classList.add('dark');
+        document.getElementById('theme-toggle').addEventListener('click', () => { html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+    </script>
+</body>
+</html>
