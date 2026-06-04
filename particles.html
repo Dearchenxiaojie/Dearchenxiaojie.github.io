@@ -197,8 +197,8 @@
             }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1675466862/camera_utils.js" crossorigin="anonymous"></script>
 
     <script type="module">
         import * as THREE from 'three';
@@ -609,24 +609,40 @@
             previewCanvas.width = 320;
             previewCanvas.height = 240;
 
-            const hands = new Hands({
-                locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
-            });
-            hands.setOptions({
-                maxNumHands: 1,
-                modelComplexity: 1,
-                minDetectionConfidence: 0.6,
-                minTrackingConfidence: 0.5
-            });
-            hands.onResults(onHandsResults);
+            try {
+                const hands = new Hands({
+                    locateFile: (file) => {
+                        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/${file}`;
+                    }
+                });
 
-            const cam = new Camera(videoEl, {
-                onFrame: async () => await hands.send({ image: videoEl }),
-                width: 640, height: 480
-            });
-            cam.start().catch(() => {
-                document.getElementById('gesture-text').textContent = '摄像头启动失败';
-            });
+                hands.setOptions({
+                    maxNumHands: 1,
+                    modelComplexity: 1,
+                    minDetectionConfidence: 0.6,
+                    minTrackingConfidence: 0.5
+                });
+
+                hands.onResults(onHandsResults);
+
+                const cam = new Camera(videoEl, {
+                    onFrame: async () => {
+                        await hands.send({ image: videoEl });
+                    },
+                    width: 640,
+                    height: 480
+                });
+
+                cam.start().then(() => {
+                    console.log('摄像头启动成功');
+                }).catch((err) => {
+                    console.error('摄像头启动失败:', err);
+                    document.getElementById('gesture-text').textContent = '摄像头启动失败';
+                });
+            } catch (err) {
+                console.error('MediaPipe 初始化失败:', err);
+                document.getElementById('gesture-text').textContent = '手势识别加载失败';
+            }
         }
 
         // 识别手势（原项目算法）
