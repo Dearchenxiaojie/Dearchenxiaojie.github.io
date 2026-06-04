@@ -114,11 +114,10 @@
 
         /* 摄像头预览 */
         #webcam-preview {
-            position: fixed; bottom: 20px; right: 20px;
             width: 160px; height: 120px;
             border-radius: 12px;
             border: 2px solid rgba(0,243,255,0.5);
-            opacity: 0.8; z-index: 5;
+            opacity: 0.8;
         }
 
         /* 手势状态 */
@@ -133,6 +132,19 @@
 
         /* 提示 */
         .hint { margin-top: 12px; font-size: 10px; color: #555; line-height: 1.6; }
+
+        /* 面板折叠 */
+        #panel-toggle { background: none; border: 1px solid rgba(255,255,255,0.2); color: #999; cursor: pointer; font-size: 14px; padding: 0 6px; border-radius: 4px; line-height: 1; }
+        #panel-toggle:hover { background: rgba(0,243,255,0.2); color: #00f3ff; }
+        .panel-body { overflow: hidden; transition: max-height 0.3s ease, opacity 0.2s ease; max-height: 600px; opacity: 1; }
+        #panel.collapsed .panel-body { max-height: 0; opacity: 0; }
+        #panel.collapsed #panel-toggle { color: #00f3ff; }
+
+        /* 骨架折叠 */
+        #skeleton-wrap { position: fixed; bottom: 20px; right: 20px; z-index: 5; }
+        #skeleton-toggle { display: block; background: rgba(10,10,16,0.8); border: 1px solid rgba(0,243,255,0.3); color: #00f3ff; cursor: pointer; font-size: 11px; padding: 3px 8px; border-radius: 6px; margin-bottom: 4px; margin-left: auto; }
+        #skeleton-wrap.collapsed #webcam-preview, #skeleton-wrap.collapsed #skeleton-toggle { display: none; }
+        #skeleton-wrap.collapsed::after { content: '骨架'; display: block; background: rgba(10,10,16,0.8); border: 1px solid rgba(0,243,255,0.3); color: #00f3ff; padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; text-align: right; }
     </style>
 </head>
 <body>
@@ -143,8 +155,9 @@
 
     <!-- 控制面板 -->
     <div id="panel">
-        <h2>✨ 粒子系统</h2>
+        <h2>✨ 粒子系统 <button id="panel-toggle">−</button></h2>
 
+        <div class="panel-body">
         <label>形态选择</label>
         <div class="shape-grid">
             <button class="shape-btn active" data-shape="galaxy"><span>🌌</span>银河</button>
@@ -835,6 +848,23 @@
 
         document.getElementById('particle-size').addEventListener('input', (e) => {
             if (material) material.uniforms.size = { value: parseFloat(e.target.value) };
+        });
+
+        // ===== 折叠功能 =====
+        document.getElementById('panel-toggle').addEventListener('click', function() {
+            const panel = document.getElementById('panel');
+            panel.classList.toggle('collapsed');
+            this.textContent = panel.classList.contains('collapsed') ? '+' : '−';
+        });
+
+        document.getElementById('skeleton-toggle').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('skeleton-wrap').classList.add('collapsed');
+        });
+        document.getElementById('skeleton-wrap').addEventListener('click', function() {
+            if (this.classList.contains('collapsed')) {
+                this.classList.remove('collapsed');
+            }
         });
 
         // ===== 启动 =====
