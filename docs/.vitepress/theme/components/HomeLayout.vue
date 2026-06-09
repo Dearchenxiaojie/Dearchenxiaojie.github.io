@@ -37,7 +37,7 @@ const recentPosts = posts.slice(0, 3)
         </h1>
         <p class="hero-desc">
           你好，我是 Dearchenxiaojie 👋<br>
-          大数据专业 · 生活记录者 · 摄影爱好者
+          热爱生活 · 喜欢编程 · 用镜头记录世界
         </p>
         <div class="hero-stats">
           <div class="stat">
