@@ -20,7 +20,8 @@ export default defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '文章', link: '/posts/' },
-      { text: '相册', link: '/gallery/' },
+      { text: '工具', link: '/tools/' },
+      { text: '存档', link: '/saves/' },
       { text: '关于', link: '/about' },
     ],
 

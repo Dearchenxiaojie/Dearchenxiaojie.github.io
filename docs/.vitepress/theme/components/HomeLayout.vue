@@ -18,7 +18,8 @@ const recentPosts = posts.slice(0, 3)
         <nav class="navbar-menu">
           <a href="/" class="menu-item active">首页</a>
           <a href="/posts/" class="menu-item">文章</a>
-          <a href="/gallery/" class="menu-item">相册</a>
+          <a href="/tools/" class="menu-item">工具</a>
+          <a href="/saves/" class="menu-item">存档</a>
           <a href="/about" class="menu-item">关于</a>
         </nav>
       </div>
@@ -37,7 +38,7 @@ const recentPosts = posts.slice(0, 3)
         </h1>
         <p class="hero-desc">
           你好，我是 Dearchenxiaojie 👋<br>
-          热爱生活 · 喜欢编程 · 用镜头记录世界
+          热爱折腾 · 喜欢分享 · 记录生活点滴
         </p>
         <div class="hero-stats">
           <div class="stat">

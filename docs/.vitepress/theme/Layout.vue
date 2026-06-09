@@ -15,7 +15,7 @@ const pageStyle = computed(() => {
   if (path === '/' || path === '/index.html') return 'home'
   if (path.startsWith('/gallery')) return 'gallery'
   if (path.startsWith('/about')) return 'about'
-  if (path.startsWith('/posts')) return 'posts'
+  if (path.startsWith('/posts') || path.startsWith('/tools') || path.startsWith('/saves')) return 'posts'
   return 'home'
 })
 </script>
