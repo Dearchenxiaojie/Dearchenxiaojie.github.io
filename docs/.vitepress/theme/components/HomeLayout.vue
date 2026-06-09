@@ -113,11 +113,21 @@ const recentPosts = posts.slice(0, 3)
         <a href="/gallery/" class="view-all">进入相册 →</a>
       </div>
       <div class="gallery-grid">
-        <div class="gallery-item large"><span>🌸</span></div>
-        <div class="gallery-item"><span>☀️</span></div>
-        <div class="gallery-item"><span>🍂</span></div>
-        <div class="gallery-item"><span>❄️</span></div>
-        <div class="gallery-item"><span>🌙</span></div>
+        <div class="gallery-item large">
+          <img src="/gallery/2025/2025-06/IMG_20250615_131559.jpg" alt="2025年6月" loading="lazy" />
+        </div>
+        <div class="gallery-item">
+          <img src="/gallery/2025/2025-06/IMG_20250615_131708.jpg" alt="2025年6月" loading="lazy" />
+        </div>
+        <div class="gallery-item">
+          <img src="/gallery/2025/2025-06/IMG_20250615_131802.jpg" alt="2025年6月" loading="lazy" />
+        </div>
+        <div class="gallery-item">
+          <img src="/gallery/2025/2025-06/IMG_20250615_131935.jpg" alt="2025年6月" loading="lazy" />
+        </div>
+        <div class="gallery-item">
+          <img src="/gallery/2025/2025-06/IMG_20250615_132557.jpg" alt="2025年6月" loading="lazy" />
+        </div>
       </div>
     </section>
 
@@ -487,12 +497,9 @@ print(f"{me.mood} {me.today}")</code></pre>
 }
 .gallery-item {
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--color-primary-100), var(--bg-secondary));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
+  overflow: hidden;
   transition: transform var(--transition-base);
+  cursor: pointer;
 }
 .gallery-item:hover {
   transform: scale(1.02);
@@ -500,7 +507,12 @@ print(f"{me.mood} {me.today}")</code></pre>
 .gallery-item.large {
   grid-column: span 2;
   grid-row: span 2;
-  font-size: 4rem;
+}
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* 代码块 */
