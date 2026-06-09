@@ -81,7 +81,8 @@ const getPostIcon = (tags) => {
         <article v-for="post in recentPosts" :key="post.url" class="post-card">
           <a :href="post.url">
             <div class="post-cover">
-              <span>{{ getPostIcon(post.tags) }}</span>
+              <img v-if="post.cover" :src="post.cover" :alt="post.title" loading="lazy" />
+              <span v-else>{{ getPostIcon(post.tags) }}</span>
             </div>
             <div class="post-body">
               <div class="post-meta">
@@ -221,6 +222,9 @@ const getPostIcon = (tags) => {
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
   align-items: center;
+  background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--bg-primary) 50%, var(--autumn-50) 100%);
+  border-radius: var(--radius-2xl);
+  margin-top: 2rem;
 }
 .hero-badge {
   display: inline-flex;
@@ -379,6 +383,12 @@ const getPostIcon = (tags) => {
   align-items: center;
   justify-content: center;
   font-size: 3rem;
+  overflow: hidden;
+}
+.post-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .post-body {
   padding: 1.5rem;
@@ -421,14 +431,14 @@ const getPostIcon = (tags) => {
   font-weight: 500;
 }
 
-/* 相册预览 */
+/* 相册预览 - 瀑布流 */
 .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 12rem);
-  gap: 1rem;
+  columns: 3;
+  column-gap: 12px;
 }
 .gallery-item {
+  break-inside: avoid;
+  margin-bottom: 12px;
   border-radius: var(--radius-lg);
   overflow: hidden;
   transition: transform var(--transition-base);
@@ -437,14 +447,9 @@ const getPostIcon = (tags) => {
 .gallery-item:hover {
   transform: scale(1.02);
 }
-.gallery-item.large {
-  grid-column: span 2;
-  grid-row: span 2;
-}
 .gallery-item img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
   display: block;
 }
 
