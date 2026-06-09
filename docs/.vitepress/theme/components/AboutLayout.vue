@@ -4,23 +4,25 @@
 <template>
   <div class="about-page">
     <!-- 导航栏 -->
-    <nav class="about-nav">
-      <div class="nav-inner">
-        <a href="/" class="nav-logo">☁️ 云上日志</a>
-        <ul class="nav-links">
-          <li><a href="/">首页</a></li>
-          <li><a href="/posts/">文章</a></li>
-          <li><a href="/gallery/">相册</a></li>
-          <li><a href="/about" class="active">关于</a></li>
-        </ul>
-      </div>
-    </nav>
+    <header class="navbar">
+      <div class="navbar-inner">
+        <a href="/" class="navbar-logo">
+          <span class="logo-icon">☁️</span>
+          <span class="logo-text">云上日志</span>
+        </a>
 
-    <!-- 个人介绍头部 -->
-    <section class="about-hero">
-      <div class="about-avatar">
-        <div class="avatar-placeholder">📷</div>
+        <nav class="navbar-menu">
+          <a href="/" class="menu-item">首页</a>
+          <a href="/posts/" class="menu-item">文章</a>
+          <a href="/gallery/" class="menu-item">相册</a>
+          <a href="/about" class="menu-item active">关于</a>
+        </nav>
       </div>
+    </header>
+
+    <!-- Hero 区域 -->
+    <section class="about-hero">
+      <div class="about-avatar">📷</div>
       <h1>你好呀 👋</h1>
       <p class="about-name">我是 Dearchenxiaojie，很高兴认识你</p>
     </section>
@@ -73,7 +75,7 @@
         <div class="skill-card">
           <div class="skill-icon">💻</div>
           <h3>编程</h3>
-          <ul>
+          <ul class="skill-list">
             <li>Python</li>
             <li>C#</li>
             <li>JavaScript</li>
@@ -82,7 +84,7 @@
         <div class="skill-card">
           <div class="skill-icon">📷</div>
           <h3>摄影</h3>
-          <ul>
+          <ul class="skill-list">
             <li>风景</li>
             <li>人像</li>
             <li>后期</li>
@@ -91,7 +93,7 @@
         <div class="skill-card">
           <div class="skill-icon">📖</div>
           <h3>阅读</h3>
-          <ul>
+          <ul class="skill-list">
             <li>技术</li>
             <li>文学</li>
             <li>写作</li>
@@ -103,14 +105,14 @@
     <!-- 联系方式 -->
     <section class="about-card">
       <h2>联系方式</h2>
-      <div class="contact-links">
-        <a href="mailto:2949536466@qq.com" class="contact-btn">
+      <div class="contact-grid">
+        <a href="mailto:2949536466@qq.com" class="contact-card">
           <span class="contact-icon">📧</span>
-          <span>Email</span>
+          <span class="contact-label">Email</span>
         </a>
-        <a href="https://github.com/Dearchenxiaojie" target="_blank" class="contact-btn">
+        <a href="https://github.com/Dearchenxiaojie" target="_blank" class="contact-card">
           <span class="contact-icon">🐙</span>
-          <span>GitHub</span>
+          <span class="contact-label">GitHub</span>
         </a>
       </div>
     </section>
