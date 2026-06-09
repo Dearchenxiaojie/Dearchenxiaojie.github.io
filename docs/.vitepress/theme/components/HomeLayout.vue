@@ -18,6 +18,7 @@ const recentPosts = posts.slice(0, 3)
         <nav class="navbar-menu">
           <a href="/" class="menu-item active">首页</a>
           <a href="/posts/" class="menu-item">文章</a>
+          <a href="/gallery/" class="menu-item">相册</a>
           <a href="/tools/" class="menu-item">工具</a>
           <a href="/saves/" class="menu-item">存档</a>
           <a href="/about" class="menu-item">关于</a>
