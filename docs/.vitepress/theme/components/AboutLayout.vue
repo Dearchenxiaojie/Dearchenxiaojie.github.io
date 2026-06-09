@@ -54,15 +54,8 @@
         <div class="timeline-item">
           <div class="timeline-dot"></div>
           <div class="timeline-content">
-            <span class="timeline-date">2024.06</span>
+            <span class="timeline-date">2025.06</span>
             <span class="timeline-text">高中毕业</span>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-content">
-            <span class="timeline-date">2023.xx</span>
-            <span class="timeline-text">写下第一行代码</span>
           </div>
         </div>
       </div>

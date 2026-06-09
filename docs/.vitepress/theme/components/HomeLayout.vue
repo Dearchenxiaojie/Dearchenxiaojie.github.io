@@ -62,8 +62,7 @@ const getPostIcon = (tags) => {
       </div>
       <div class="hero-visual">
         <div class="visual-card">
-          <span class="visual-emoji">✨</span>
-          <span class="visual-text">记录美好瞬间</span>
+          <img src="/avatar.jpg" alt="头像" class="avatar-img" />
         </div>
       </div>
     </section>
@@ -311,14 +310,12 @@ const getPostIcon = (tags) => {
   justify-content: center;
   gap: 1rem;
   box-shadow: var(--shadow-lg);
+  overflow: hidden;
 }
-.visual-emoji {
-  font-size: 4rem;
-}
-.visual-text {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  color: var(--color-primary-700);
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* 区块 */
