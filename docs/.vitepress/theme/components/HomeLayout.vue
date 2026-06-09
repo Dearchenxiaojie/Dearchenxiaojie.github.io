@@ -6,31 +6,17 @@ import { data as posts } from '../posts.data.mjs'
 const { site, frontmatter } = useData()
 const recentPosts = posts.slice(0, 3)
 
-// 代码复制功能
-const copyStatus = ref('')
-const codeContent = `from datetime import datetime
-
-class Life:
-    def __init__(self):
-        self.mood = "😊"
-        self.today = "写了一个爬虫"
-
-me = Life()
-print(f"{me.mood} {me.today}")`
-
-const copyCode = async () => {
-  try {
-    await navigator.clipboard.writeText(codeContent)
-    copyStatus.value = '已复制!'
-    setTimeout(() => {
-      copyStatus.value = ''
-    }, 2000)
-  } catch (err) {
-    copyStatus.value = '复制失败'
-    setTimeout(() => {
-      copyStatus.value = ''
-    }, 2000)
-  }
+// 根据文章标签返回图标
+const getPostIcon = (tags) => {
+  if (!tags || tags.length === 0) return '📝'
+  const tag = tags[0].toLowerCase()
+  if (tag.includes('github') || tag.includes('git')) return '🐙'
+  if (tag.includes('工具') || tag.includes('软件')) return '🔧'
+  if (tag.includes('教程') || tag.includes('指南')) return '📚'
+  if (tag.includes('游戏') || tag.includes('minecraft')) return '🎮'
+  if (tag.includes('代码') || tag.includes('编程')) return '💻'
+  if (tag.includes('生活') || tag.includes('日常')) return '🌿'
+  return '📝'
 }
 </script>
 
@@ -69,25 +55,9 @@ const copyCode = async () => {
           你好，我是 Dearchenxiaojie 👋<br>
           热爱折腾 · 喜欢分享 · 记录生活点滴
         </p>
-        <div class="hero-stats">
-          <div class="stat">
-            <span class="stat-num">{{ posts.length }}</span>
-            <span class="stat-label">篇文章</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <span class="stat-num">0</span>
-            <span class="stat-label">张照片</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <span class="stat-num">3</span>
-            <span class="stat-label">个标签</span>
-          </div>
-        </div>
         <div class="hero-actions">
-          <a href="/posts/" class="btn btn-primary">探索文章 →</a>
-          <a href="/about" class="btn btn-outline">了解更多</a>
+          <a href="/posts/" class="btn btn-primary">查看文章</a>
+          <a href="/gallery/" class="btn btn-outline">浏览相册</a>
         </div>
       </div>
       <div class="hero-visual">
@@ -112,7 +82,7 @@ const copyCode = async () => {
         <article v-for="post in recentPosts" :key="post.url" class="post-card">
           <a :href="post.url">
             <div class="post-cover">
-              <span>📝</span>
+              <span>{{ getPostIcon(post.tags) }}</span>
             </div>
             <div class="post-body">
               <div class="post-meta">
@@ -156,36 +126,6 @@ const copyCode = async () => {
         <div class="gallery-item">
           <img src="/gallery/2025/2025-06/IMG_20250615_132557.jpg" alt="2025年6月" loading="lazy" />
         </div>
-      </div>
-    </section>
-
-    <!-- 代码角落 -->
-    <section class="section">
-      <div class="section-header">
-        <div>
-          <span class="section-badge">💻 代码角落</span>
-          <h2>最近的代码片段</h2>
-        </div>
-      </div>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-dots">
-            <span class="dot red"></span>
-            <span class="dot yellow"></span>
-            <span class="dot green"></span>
-          </div>
-          <span class="code-filename">life.py</span>
-          <button class="copy-btn" @click="copyCode">{{ copyStatus || '复制' }}</button>
-        </div>
-        <pre><code>from datetime import datetime
-
-class Life:
-    def __init__(self):
-        self.mood = "😊"
-        self.today = "写了一个爬虫"
-
-me = Life()
-print(f"{me.mood} {me.today}")</code></pre>
       </div>
     </section>
 
@@ -323,38 +263,6 @@ print(f"{me.mood} {me.today}")</code></pre>
   font-size: 1.125rem;
   color: var(--text-secondary);
   margin-bottom: 2rem;
-}
-.hero-stats {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  background: var(--bg-card);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-light);
-  margin-bottom: 2rem;
-}
-.stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-}
-.stat-num {
-  font-family: var(--font-display);
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: var(--color-primary-600);
-}
-.stat-label {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-}
-.stat-divider {
-  width: 1px;
-  height: 2.5rem;
-  background: var(--border-default);
 }
 .hero-actions {
   display: flex;
