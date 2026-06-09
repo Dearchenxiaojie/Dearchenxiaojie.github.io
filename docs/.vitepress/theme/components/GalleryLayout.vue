@@ -80,23 +80,11 @@ onMounted(() => {
       </div>
     </header>
 
-    <!-- 加载提示侧边栏 -->
-    <aside class="loading-sidebar" :class="{ 'is-visible': isLoading }">
-      <div class="loading-content">
-        <div class="loading-icon">
-          <div class="spinner"></div>
-        </div>
-        <h3>加载照片中</h3>
-        <p class="loading-desc">共 {{ totalPhotos }} 张照片</p>
-        <div class="loading-progress">
-          <div class="progress-bar">
-            <div class="progress-fill" :style="{ width: loadingProgress + '%' }"></div>
-          </div>
-          <span class="progress-text">{{ loadingProgress }}%</span>
-        </div>
-        <p class="loading-hint">照片较多，请耐心等待...</p>
-      </div>
-    </aside>
+    <!-- 加载提示 -->
+    <div class="loading-notice" v-if="isLoading">
+      <span class="loading-dot"></span>
+      <span>照片加载中，请稍候...</span>
+    </div>
 
     <!-- Hero -->
     <section class="gallery-hero">
@@ -207,91 +195,41 @@ onMounted(() => {
   border-radius: 1px;
 }
 
-/* 加载提示侧边栏 */
-.loading-sidebar {
+/* 加载提示 */
+.loading-notice {
   position: fixed;
-  left: -320px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 300px;
-  background: rgba(26, 26, 46, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0 16px 16px 0;
-  padding: 2rem;
-  z-index: 999;
-  transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
-}
-
-.loading-sidebar.is-visible {
+  top: var(--nav-height);
   left: 0;
+  right: 0;
+  z-index: 999;
+  background: rgba(26, 26, 46, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  animation: fadeIn 0.3s ease;
 }
 
-.loading-content {
-  text-align: center;
-}
-
-.loading-icon {
-  margin-bottom: 1.5rem;
-}
-
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #FFD700;
+.loading-dot {
+  width: 8px;
+  height: 8px;
+  background: #FFD700;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
+  animation: pulse 1.5s infinite;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
 }
 
-.loading-content h3 {
-  font-family: var(--font-serif);
-  font-size: 1.25rem;
-  color: white;
-  margin-bottom: 0.5rem;
-}
-
-.loading-desc {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 1.5rem;
-}
-
-.loading-progress {
-  margin-bottom: 1rem;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #FFD700, #FFA500);
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
-.progress-text {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #FFD700;
-}
-
-.loading-hint {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.4);
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Hero */
