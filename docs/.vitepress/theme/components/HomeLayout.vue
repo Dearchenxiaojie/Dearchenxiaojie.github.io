@@ -3,7 +3,6 @@ import { useData } from 'vitepress'
 import { data as posts } from '../posts.data.mjs'
 
 const { site, frontmatter } = useData()
-
 const recentPosts = posts.slice(0, 3)
 </script>
 
@@ -16,111 +15,82 @@ const recentPosts = posts.slice(0, 3)
           <span class="logo-icon">☁️</span>
           <span class="logo-text">云上日志</span>
         </a>
-
         <nav class="navbar-menu">
           <a href="/" class="menu-item active">首页</a>
           <a href="/posts/" class="menu-item">文章</a>
           <a href="/gallery/" class="menu-item">相册</a>
           <a href="/about" class="menu-item">关于</a>
         </nav>
-
-        <div class="navbar-actions">
-          <button class="search-btn" aria-label="搜索">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.35-4.35"></path>
-            </svg>
-          </button>
-        </div>
       </div>
     </header>
 
-    <!-- Hero 区域 -->
+    <!-- Hero -->
     <section class="hero">
       <div class="hero-content">
         <div class="hero-badge">
           <span class="badge-dot"></span>
           <span>欢迎来到我的小天地</span>
         </div>
-
         <h1 class="hero-title">
-          <span class="title-line">用数据的思维</span>
-          <span class="title-line highlight">记录生活的温度</span>
+          <span>用数据的思维</span>
+          <span class="highlight">记录生活的温度</span>
         </h1>
-
-        <p class="hero-description">
+        <p class="hero-desc">
           你好，我是 Dearchenxiaojie 👋<br>
           大数据专业 · 生活记录者 · 摄影爱好者
         </p>
-
         <div class="hero-stats">
-          <div class="stat-item">
-            <span class="stat-number">{{ posts.length }}</span>
+          <div class="stat">
+            <span class="stat-num">{{ posts.length }}</span>
             <span class="stat-label">篇文章</span>
           </div>
           <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-number">0</span>
+          <div class="stat">
+            <span class="stat-num">0</span>
             <span class="stat-label">张照片</span>
           </div>
           <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-number">3</span>
+          <div class="stat">
+            <span class="stat-num">3</span>
             <span class="stat-label">个标签</span>
           </div>
         </div>
-
         <div class="hero-actions">
-          <a href="/posts/" class="btn btn-primary">
-            <span>探索文章</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="m9 18 6-6-6-6"></path>
-            </svg>
-          </a>
+          <a href="/posts/" class="btn btn-primary">探索文章 →</a>
           <a href="/about" class="btn btn-outline">了解更多</a>
         </div>
       </div>
-
       <div class="hero-visual">
         <div class="visual-card">
-          <div class="card-placeholder">
-            <span class="placeholder-emoji">✨</span>
-            <span class="placeholder-text">记录美好瞬间</span>
-          </div>
+          <span class="visual-emoji">✨</span>
+          <span class="visual-text">记录美好瞬间</span>
         </div>
       </div>
     </section>
 
     <!-- 最新文章 -->
-    <section class="section posts-section">
+    <section class="section">
       <div class="section-header">
         <div>
           <span class="section-badge">📝 最新发布</span>
-          <h2 class="section-title">近期文章</h2>
+          <h2>近期文章</h2>
           <p class="section-desc">分享学习心得与生活感悟</p>
         </div>
-        <a href="/posts/" class="view-all-link">
-          查看全部
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m9 18 6-6-6-6"></path>
-          </svg>
-        </a>
+        <a href="/posts/" class="view-all">查看全部 →</a>
       </div>
-
       <div class="posts-grid">
         <article v-for="post in recentPosts" :key="post.url" class="post-card">
-          <a :href="post.url" class="post-card-link">
+          <a :href="post.url">
             <div class="post-cover">
-              <div class="cover-gradient"></div>
-              <span class="cover-emoji">📝</span>
+              <span>📝</span>
             </div>
-            <div class="post-content">
+            <div class="post-body">
               <div class="post-meta">
-                <time class="post-date">{{ post.date }}</time>
-                <span class="post-reading">{{ post.readingTime }} 分钟阅读</span>
+                <time>{{ post.date }}</time>
+                <span>{{ post.readingTime }} 分钟阅读</span>
               </div>
-              <h3 class="post-title">{{ post.title }}</h3>
-              <p class="post-excerpt">{{ post.description }}</p>
+              <h3>{{ post.title }}</h3>
+              <p>{{ post.description }}</p>
               <div class="post-tags">
                 <span v-for="tag in post.tags" :key="tag" class="tag">#{{ tag }}</span>
               </div>
@@ -131,62 +101,32 @@ const recentPosts = posts.slice(0, 3)
     </section>
 
     <!-- 照片预览 -->
-    <section class="section gallery-section">
+    <section class="section">
       <div class="section-header">
         <div>
           <span class="section-badge">📷 光影瞬间</span>
-          <h2 class="section-title">近期拍摄</h2>
+          <h2>近期拍摄</h2>
           <p class="section-desc">用镜头记录生活中的美好</p>
         </div>
-        <a href="/gallery/" class="view-all-link">
-          进入相册
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m9 18 6-6-6-6"></path>
-          </svg>
-        </a>
+        <a href="/gallery/" class="view-all">进入相册 →</a>
       </div>
-
-      <div class="gallery-preview">
-        <div class="gallery-grid">
-          <div class="gallery-item large">
-            <div class="gallery-placeholder">
-              <span>🌸</span>
-            </div>
-          </div>
-          <div class="gallery-item">
-            <div class="gallery-placeholder">
-              <span>☀️</span>
-            </div>
-          </div>
-          <div class="gallery-item">
-            <div class="gallery-placeholder">
-              <span>🍂</span>
-            </div>
-          </div>
-          <div class="gallery-item">
-            <div class="gallery-placeholder">
-              <span>❄️</span>
-            </div>
-          </div>
-          <div class="gallery-item">
-            <div class="gallery-placeholder">
-              <span>🌙</span>
-            </div>
-          </div>
-        </div>
+      <div class="gallery-grid">
+        <div class="gallery-item large"><span>🌸</span></div>
+        <div class="gallery-item"><span>☀️</span></div>
+        <div class="gallery-item"><span>🍂</span></div>
+        <div class="gallery-item"><span>❄️</span></div>
+        <div class="gallery-item"><span>🌙</span></div>
       </div>
     </section>
 
     <!-- 代码角落 -->
-    <section class="section code-section">
+    <section class="section">
       <div class="section-header">
         <div>
           <span class="section-badge">💻 代码角落</span>
-          <h2 class="section-title">最近的代码片段</h2>
-          <p class="section-desc">用代码解决问题的乐趣</p>
+          <h2>最近的代码片段</h2>
         </div>
       </div>
-
       <div class="code-block">
         <div class="code-header">
           <div class="code-dots">
@@ -197,21 +137,15 @@ const recentPosts = posts.slice(0, 3)
           <span class="code-filename">life.py</span>
           <button class="copy-btn">复制</button>
         </div>
-        <pre class="code-content"><code>from datetime import datetime
+        <pre><code>from datetime import datetime
 
 class Life:
-    """记录生活的类"""
     def __init__(self):
         self.mood = "😊"
         self.today = "写了一个爬虫"
-        self.date = datetime.now()
 
-    def log(self):
-        return f"{self.date}: {self.mood} {self.today}"
-
-# 记录今天
 me = Life()
-print(me.log())</code></pre>
+print(f"{me.mood} {me.today}")</code></pre>
       </div>
     </section>
 
@@ -221,25 +155,23 @@ print(me.log())</code></pre>
         <div class="footer-brand">
           <span class="footer-logo">☁️</span>
           <span class="footer-name">云上日志</span>
-          <p class="footer-tagline">用热爱记录每一天</p>
+          <p>用热爱记录每一天</p>
         </div>
-
         <div class="footer-links">
-          <div class="footer-column">
+          <div>
             <h4>导航</h4>
             <a href="/">首页</a>
             <a href="/posts/">文章</a>
             <a href="/gallery/">相册</a>
             <a href="/about">关于</a>
           </div>
-          <div class="footer-column">
+          <div>
             <h4>社交</h4>
             <a href="https://github.com/Dearchenxiaojie" target="_blank">GitHub</a>
             <a href="mailto:2949536466@qq.com">Email</a>
           </div>
         </div>
       </div>
-
       <div class="footer-bottom">
         <p>© 2026 云上日志 · 用 ❤️ 构建</p>
       </div>
@@ -248,323 +180,237 @@ print(me.log())</code></pre>
 </template>
 
 <style scoped>
-/* ========== 导航栏 ========== */
+/* 导航栏 */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(255, 250, 245, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(250, 250, 249, 0.8);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-light);
   height: var(--nav-height);
 }
-
 .navbar-inner {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: 0 1.5rem;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  text-decoration: none;
+  gap: 0.5rem;
   color: var(--text-primary);
-}
-
-.logo-icon {
-  font-size: 24px;
-}
-
-.logo-text {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
+  font-size: 1.25rem;
   font-weight: 600;
 }
-
 .navbar-menu {
   display: flex;
-  align-items: center;
-  gap: var(--space-8);
+  gap: 2rem;
 }
-
 .menu-item {
   color: var(--text-secondary);
-  font-size: var(--text-sm);
+  font-size: 0.875rem;
   font-weight: 500;
-  text-decoration: none;
-  padding: var(--space-2) 0;
+  padding: 0.5rem 0;
   position: relative;
-  transition: color var(--transition-fast);
 }
-
-.menu-item:hover,
-.menu-item.active {
+.menu-item:hover, .menu-item.active {
   color: var(--text-primary);
 }
-
 .menu-item.active::after {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: 0;
   left: 0;
   right: 0;
   height: 2px;
-  background: var(--color-primary);
+  background: var(--color-primary-500);
   border-radius: 1px;
 }
 
-.search-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-secondary);
-  transition: all var(--transition-fast);
-}
-
-.search-btn:hover {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-}
-
-/* ========== Hero 区域 ========== */
+/* Hero */
 .hero {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: var(--space-24) var(--space-6) var(--space-16);
+  padding: 6rem 1.5rem 4rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-16);
+  gap: 4rem;
   align-items: center;
 }
-
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
-  background: var(--color-primary-lightest);
-  color: var(--color-primary);
+  gap: 0.5rem;
+  padding: 0.375rem 1rem;
+  background: var(--color-primary-100);
+  color: var(--color-primary-800);
   border-radius: var(--radius-full);
-  font-size: var(--text-sm);
+  font-size: 0.875rem;
   font-weight: 500;
-  margin-bottom: var(--space-6);
+  margin-bottom: 1.5rem;
 }
-
 .badge-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--color-primary);
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--color-primary-500);
   border-radius: 50%;
   animation: pulse 2s infinite;
 }
-
-.hero-title {
-  font-family: var(--font-serif);
-  font-size: var(--text-5xl);
-  font-weight: 700;
-  line-height: var(--leading-tight);
-  margin-bottom: var(--space-6);
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
-
-.title-line {
+.hero-title {
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+.hero-title span {
   display: block;
 }
-
-.title-line.highlight {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-lighter));
+.highlight {
+  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-400));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
-
-.hero-description {
-  font-size: var(--text-lg);
+.hero-desc {
+  font-size: 1.125rem;
   color: var(--text-secondary);
-  line-height: var(--leading-relaxed);
-  margin-bottom: var(--space-8);
+  margin-bottom: 2rem;
 }
-
 .hero-stats {
   display: flex;
   align-items: center;
-  gap: var(--space-6);
-  margin-bottom: var(--space-8);
-  padding: var(--space-6);
+  gap: 1.5rem;
+  padding: 1.5rem;
   background: var(--bg-card);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-light);
+  margin-bottom: 2rem;
 }
-
-.stat-item {
+.stat {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-1);
+  gap: 0.25rem;
 }
-
-.stat-number {
+.stat-num {
   font-family: var(--font-display);
-  font-size: var(--text-3xl);
+  font-size: 1.875rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-primary-600);
 }
-
 .stat-label {
-  font-size: var(--text-sm);
+  font-size: 0.875rem;
   color: var(--text-secondary);
 }
-
 .stat-divider {
   width: 1px;
-  height: 40px;
+  height: 2.5rem;
   background: var(--border-default);
 }
-
 .hero-actions {
   display: flex;
-  gap: var(--space-4);
+  gap: 1rem;
 }
-
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-6);
+  padding: 0.75rem 1.5rem;
   border-radius: var(--radius-lg);
-  font-size: var(--text-base);
+  font-size: 1rem;
   font-weight: 500;
-  text-decoration: none;
   transition: all var(--transition-fast);
 }
-
 .btn-primary {
-  background: var(--color-primary);
-  color: var(--text-inverse);
-  box-shadow: var(--shadow-sm);
+  background: var(--color-primary-600);
+  color: white;
 }
-
 .btn-primary:hover {
-  background: var(--color-primary-dark);
-  box-shadow: var(--shadow-md);
+  background: var(--color-primary-700);
   transform: translateY(-2px);
-  color: var(--text-inverse);
+  box-shadow: var(--shadow-lg);
+  color: white;
 }
-
 .btn-outline {
-  background: transparent;
-  color: var(--text-primary);
   border: 2px solid var(--border-default);
+  color: var(--text-primary);
 }
-
 .btn-outline:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  border-color: var(--color-primary-400);
+  color: var(--color-primary-700);
 }
-
 .hero-visual {
   display: flex;
   justify-content: center;
 }
-
 .visual-card {
   width: 100%;
-  max-width: 400px;
+  max-width: 24rem;
   aspect-ratio: 4/3;
-  background: linear-gradient(135deg, var(--color-primary-lightest), var(--bg-secondary));
+  background: linear-gradient(135deg, var(--color-primary-100), var(--color-primary-50));
   border-radius: var(--radius-2xl);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
   box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border-light);
 }
-
-.card-placeholder {
-  text-align: center;
+.visual-emoji {
+  font-size: 4rem;
 }
-
-.placeholder-emoji {
-  font-size: 64px;
-  display: block;
-  margin-bottom: var(--space-4);
-}
-
-.placeholder-text {
+.visual-text {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
-  color: var(--color-primary);
+  font-size: 1.25rem;
+  color: var(--color-primary-700);
 }
 
-/* ========== 区块通用 ========== */
+/* 区块 */
 .section {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: var(--space-16) var(--space-6);
+  padding: 4rem 1.5rem;
 }
-
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: var(--space-10);
+  margin-bottom: 2.5rem;
 }
-
 .section-badge {
   display: inline-block;
-  padding: var(--space-1) var(--space-3);
-  background: var(--bg-tertiary);
-  color: var(--color-primary);
+  padding: 0.25rem 0.75rem;
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
   border-radius: var(--radius-full);
-  font-size: var(--text-sm);
+  font-size: 0.875rem;
   font-weight: 500;
-  margin-bottom: var(--space-3);
+  margin-bottom: 0.75rem;
 }
-
-.section-title {
-  font-family: var(--font-serif);
-  font-size: var(--text-3xl);
-  font-weight: 700;
-  margin-bottom: var(--space-2);
-}
-
 .section-desc {
   color: var(--text-secondary);
-  font-size: var(--text-base);
+  font-size: 1rem;
 }
-
-.view-all-link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  color: var(--color-primary);
-  font-size: var(--text-sm);
+.view-all {
+  font-size: 0.875rem;
   font-weight: 500;
-  text-decoration: none;
-  transition: gap var(--transition-fast);
+  color: var(--color-primary-600);
 }
 
-.view-all-link:hover {
-  gap: var(--space-2);
-}
-
-/* ========== 文章卡片网格 ========== */
+/* 文章卡片 */
 .posts-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-8);
+  gap: 2rem;
 }
-
 .post-card {
   background: var(--bg-card);
   border-radius: var(--radius-xl);
@@ -573,386 +419,224 @@ print(me.log())</code></pre>
   border: 1px solid var(--border-light);
   transition: all var(--transition-base);
 }
-
 .post-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-0.25rem);
   box-shadow: var(--shadow-lg);
-  border-color: var(--border-default);
 }
-
-.post-card-link {
-  text-decoration: none;
+.post-card a {
   color: inherit;
   display: block;
 }
-
 .post-cover {
-  position: relative;
-  height: 200px;
-  background: linear-gradient(135deg, var(--color-primary-lightest), var(--bg-secondary));
+  height: 12rem;
+  background: linear-gradient(135deg, var(--color-primary-100), var(--bg-secondary));
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  font-size: 3rem;
 }
-
-.cover-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(139, 105, 20, 0.1), rgba(218, 165, 32, 0.1));
+.post-body {
+  padding: 1.5rem;
 }
-
-.cover-emoji {
-  font-size: 48px;
-  position: relative;
-  z-index: 1;
-}
-
-.post-content {
-  padding: var(--space-6);
-}
-
 .post-meta {
   display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  margin-bottom: var(--space-3);
-  font-size: var(--text-sm);
+  gap: 1rem;
+  font-size: 0.875rem;
   color: var(--text-tertiary);
+  margin-bottom: 0.75rem;
 }
-
-.post-date {
-  font-weight: 500;
-}
-
-.post-title {
-  font-family: var(--font-serif);
-  font-size: var(--text-xl);
-  font-weight: 600;
-  line-height: var(--leading-snug);
-  margin-bottom: var(--space-3);
-  color: var(--text-primary);
+.post-body h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
-.post-excerpt {
-  font-size: var(--text-sm);
+.post-body p {
+  font-size: 0.875rem;
   color: var(--text-secondary);
-  line-height: var(--leading-relaxed);
-  margin-bottom: var(--space-4);
+  margin-bottom: 1rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
 .post-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: 0.5rem;
 }
-
 .tag {
-  padding: var(--space-1) var(--space-3);
-  background: var(--bg-tertiary);
-  color: var(--color-primary);
+  padding: 0.25rem 0.75rem;
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
   border-radius: var(--radius-full);
-  font-size: var(--text-xs);
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
-/* ========== 相册预览 ========== */
+/* 相册预览 */
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 200px);
-  gap: var(--space-4);
+  grid-template-rows: repeat(2, 12rem);
+  gap: 1rem;
 }
-
 .gallery-item {
   border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: var(--bg-tertiary);
-  transition: transform var(--transition-base);
-}
-
-.gallery-item:hover {
-  transform: scale(1.02);
-}
-
-.gallery-item.large {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-
-.gallery-placeholder {
-  width: 100%;
-  height: 100%;
+  background: linear-gradient(135deg, var(--color-primary-100), var(--bg-secondary));
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--color-primary-lightest), var(--bg-secondary));
+  font-size: 3rem;
+  transition: transform var(--transition-base);
+}
+.gallery-item:hover {
+  transform: scale(1.02);
+}
+.gallery-item.large {
+  grid-column: span 2;
+  grid-row: span 2;
+  font-size: 4rem;
 }
 
-.gallery-placeholder span {
-  font-size: 48px;
-}
-
-.gallery-item.large .gallery-placeholder span {
-  font-size: 64px;
-}
-
-/* ========== 代码块 ========== */
+/* 代码块 */
 .code-block {
-  max-width: 600px;
+  max-width: 36rem;
   margin: 0 auto;
   background: var(--bg-code);
   border-radius: var(--radius-xl);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
 }
-
 .code-header {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-4) var(--space-5);
-  background: #21252B;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--color-stone-950);
 }
-
 .code-dots {
   display: flex;
-  gap: 6px;
+  gap: 0.375rem;
 }
-
 .dot {
-  width: 12px;
-  height: 12px;
+  width: 0.75rem;
+  height: 0.75rem;
   border-radius: 50%;
 }
-
-.dot.red { background: #FF5F56; }
-.dot.yellow { background: #FFBD2E; }
-.dot.green { background: #27C93F; }
-
+.dot.red { background: #ef4444; }
+.dot.yellow { background: #eab308; }
+.dot.green { background: #22c55e; }
 .code-filename {
-  color: #636D83;
-  font-size: var(--text-sm);
+  color: var(--color-stone-400);
+  font-size: 0.875rem;
   font-family: var(--font-mono);
   flex: 1;
 }
-
 .copy-btn {
-  padding: var(--space-1) var(--space-3);
-  background: rgba(255, 255, 255, 0.1);
-  color: #636D83;
+  padding: 0.25rem 0.75rem;
+  background: rgba(255,255,255,0.1);
+  color: var(--color-stone-400);
   border-radius: var(--radius-sm);
-  font-size: var(--text-xs);
-  transition: all var(--transition-fast);
+  font-size: 0.75rem;
 }
-
-.copy-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: #ABB2BF;
-}
-
-.code-content {
-  padding: var(--space-5);
+.code-block pre {
   margin: 0;
+  padding: 1.25rem;
   background: transparent;
 }
 
-.code-content code {
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
-  color: #ABB2BF;
-  background: none;
-  padding: 0;
-}
-
-/* ========== 页脚 ========== */
+/* 页脚 */
 .footer {
-  background: var(--color-black);
+  background: var(--color-stone-900);
   color: var(--text-inverse);
-  padding: var(--space-16) 0 0;
-  margin-top: var(--space-16);
+  padding: 4rem 0 0;
+  margin-top: 4rem;
 }
-
 .footer-inner {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: 0 1.5rem;
   display: flex;
   justify-content: space-between;
-  gap: var(--space-16);
+  gap: 4rem;
 }
-
 .footer-brand {
-  max-width: 300px;
+  max-width: 18rem;
 }
-
 .footer-logo {
-  font-size: 32px;
+  font-size: 2rem;
   display: block;
-  margin-bottom: var(--space-3);
+  margin-bottom: 0.75rem;
 }
-
 .footer-name {
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  font-weight: 600;
+  font-size: 1.5rem;
   display: block;
-  margin-bottom: var(--space-2);
+  margin-bottom: 0.5rem;
 }
-
-.footer-tagline {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: var(--text-sm);
+.footer-brand p {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.875rem;
 }
-
 .footer-links {
   display: flex;
-  gap: var(--space-16);
+  gap: 4rem;
 }
-
-.footer-column {
+.footer-links div {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 0.75rem;
 }
-
-.footer-column h4 {
+.footer-links h4 {
   font-family: var(--font-sans);
-  font-size: var(--text-sm);
+  font-size: 0.875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.4);
-  margin-bottom: var(--space-2);
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 0.5rem;
 }
-
-.footer-column a {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: var(--text-sm);
-  text-decoration: none;
-  transition: color var(--transition-fast);
+.footer-links a {
+  color: rgba(255,255,255,0.8);
+  font-size: 0.875rem;
 }
-
-.footer-column a:hover {
-  color: var(--color-primary-lighter);
+.footer-links a:hover {
+  color: var(--color-primary-400);
 }
-
 .footer-bottom {
-  margin-top: var(--space-12);
-  padding: var(--space-6);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 3rem;
+  padding: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
   text-align: center;
 }
-
 .footer-bottom p {
-  color: rgba(255, 255, 255, 0.4);
-  font-size: var(--text-sm);
-  margin: 0;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.875rem;
 }
 
-/* ========== 响应式 ========== */
+/* 响应式 */
 @media (max-width: 1024px) {
   .hero {
     grid-template-columns: 1fr;
-    gap: var(--space-10);
-    padding: var(--space-16) var(--space-6) var(--space-10);
+    gap: 2.5rem;
   }
-
-  .hero-visual {
-    display: none;
-  }
-
-  .posts-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .hero-visual { display: none; }
+  .posts-grid { grid-template-columns: repeat(2, 1fr); }
 }
-
 @media (max-width: 768px) {
-  .navbar-menu {
-    display: none;
-  }
-
-  .hero {
-    padding: var(--space-10) var(--space-4) var(--space-8);
-  }
-
-  .hero-title {
-    font-size: var(--text-4xl);
-  }
-
-  .hero-stats {
-    flex-direction: row;
-    justify-content: space-around;
-    padding: var(--space-4);
-  }
-
-  .stat-divider {
-    width: 40px;
-    height: 1px;
-  }
-
-  .hero-actions {
-    flex-direction: column;
-  }
-
-  .btn {
-    justify-content: center;
-  }
-
-  .section {
-    padding: var(--space-10) var(--space-4);
-  }
-
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-4);
-  }
-
-  .posts-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: auto;
-  }
-
-  .gallery-item.large {
-    grid-column: span 2;
-    grid-row: span 1;
-  }
-
-  .footer-inner {
-    flex-direction: column;
-    gap: var(--space-10);
-  }
-
-  .footer-links {
-    gap: var(--space-10);
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-title {
-    font-size: var(--text-3xl);
-  }
-
-  .gallery-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .gallery-item.large {
-    grid-column: span 1;
-  }
+  .navbar-menu { display: none; }
+  .hero { padding: 3rem 1rem 2rem; }
+  .hero-title { font-size: 2rem; }
+  .hero-stats { flex-direction: row; justify-content: space-around; padding: 1rem; }
+  .stat-divider { width: 2.5rem; height: 1px; }
+  .hero-actions { flex-direction: column; }
+  .btn { justify-content: center; }
+  .posts-grid { grid-template-columns: 1fr; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
+  .gallery-item.large { grid-column: span 2; grid-row: span 1; }
+  .footer-inner { flex-direction: column; gap: 2.5rem; }
 }
 </style>
