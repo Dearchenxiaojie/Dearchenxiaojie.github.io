@@ -1,53 +1,37 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed } from 'vue'
+import photosData from '../photos.json'
 
-// 照片数据（按年月分类）
-const photoGroups = ref([
-  {
-    year: '2025',
-    months: [
-      { month: '09', label: '9月', photos: 7 },
-      { month: '08', label: '8月', photos: 10 },
-      { month: '07', label: '7月', photos: 2 },
-      { month: '06', label: '6月', photos: 21 },
-      { month: '01', label: '1月', photos: 5 },
-    ]
-  },
-  {
-    year: '2024',
-    months: [
-      { month: '09', label: '9月', photos: 1 },
-      { month: '08', label: '8月', photos: 7 },
-      { month: '06', label: '6月', photos: 2 },
-      { month: '03', label: '3月', photos: 12 },
-      { month: '02', label: '2月', photos: 2 },
-      { month: '01', label: '1月', photos: 2 },
-    ]
-  },
-  {
-    year: '2023',
-    months: [
-      { month: '12', label: '12月', photos: 1 },
-      { month: '11', label: '11月', photos: 4 },
-      { month: '08', label: '8月', photos: 1 },
-      { month: '06', label: '6月', photos: 2 },
-      { month: '05', label: '5月', photos: 1 },
-      { month: '04', label: '4月', photos: 1 },
-    ]
-  }
-])
+// 处理照片数据
+const years = Object.keys(photosData).sort().reverse()
+const activeYear = ref(years[0] || '2025')
 
-const activeYear = ref('2025')
-const activeMonth = ref(null)
+// 当前年份的月份列表
+const months = computed(() => {
+  const yearData = photosData[activeYear.value] || {}
+  return Object.keys(yearData)
+    .sort()
+    .reverse()
+    .map(month => ({
+      month,
+      label: `${parseInt(month)}月`,
+      photos: yearData[month].map(filename => ({
+        src: `/gallery/${activeYear.value}/${activeYear.value}-${month}/${filename}`,
+        name: filename
+      }))
+    }))
+})
 
-const setActive = (year, month) => {
-  activeYear.value = year
-  activeMonth.value = month
-}
-
-const getPhotoUrl = (year, month, index) => {
-  return `/gallery/${year}/${year}-${month}/IMG_${year}${month}*.jpg`
-}
+// 总照片数
+const totalPhotos = computed(() => {
+  let count = 0
+  Object.values(photosData).forEach(yearData => {
+    Object.values(yearData).forEach(monthPhotos => {
+      count += monthPhotos.length
+    })
+  })
+  return count
+})
 </script>
 
 <template>
@@ -73,47 +57,43 @@ const getPhotoUrl = (year, month, index) => {
     <!-- Hero -->
     <section class="gallery-hero">
       <h1>「每一帧都是限定版的时光」</h1>
-      <p class="gallery-desc">共 81 张照片 · 记录生活中的美好瞬间</p>
+      <p class="gallery-desc">共 {{ totalPhotos }} 张照片 · 记录生活中的美好瞬间</p>
       <div class="gallery-filters">
         <button
-          v-for="group in photoGroups"
-          :key="group.year"
+          v-for="year in years"
+          :key="year"
           class="filter-btn"
-          :class="{ active: activeYear === group.year && !activeMonth }"
-          @click="activeYear = group.year; activeMonth = null"
+          :class="{ active: activeYear === year }"
+          @click="activeYear = year"
         >
-          {{ group.year }}年
+          {{ year }}年
         </button>
       </div>
     </section>
 
-    <!-- 按月分组展示 -->
+    <!-- 照片列表 -->
     <section class="gallery-content">
-      <div v-for="group in photoGroups" :key="group.year" v-show="activeYear === group.year">
-        <div v-for="monthData in group.months" :key="monthData.month" class="month-section">
-          <div class="month-header">
-            <h2>{{ group.year }}年{{ monthData.label }}</h2>
-            <span class="photo-count">{{ monthData.photos }} 张</span>
-          </div>
+      <div v-for="monthData in months" :key="monthData.month" class="month-section">
+        <div class="month-header">
+          <h2>{{ activeYear }}年{{ monthData.label }}</h2>
+          <span class="photo-count">{{ monthData.photos.length }} 张</span>
+        </div>
 
-          <div class="photo-grid">
-            <div
-              v-for="i in monthData.photos"
-              :key="i"
-              class="photo-card"
-            >
-              <div class="photo-placeholder">
-                <span class="photo-icon">📷</span>
-              </div>
-            </div>
+        <div class="photo-grid">
+          <div
+            v-for="(photo, index) in monthData.photos"
+            :key="photo.name"
+            class="photo-card"
+          >
+            <img
+              :src="photo.src"
+              :alt="photo.name"
+              loading="lazy"
+              class="photo-img"
+            />
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- 提示 -->
-    <section class="gallery-note">
-      <p>💡 照片已按年月分类存放在 <code>/gallery/</code> 目录下</p>
     </section>
   </div>
 </template>
@@ -246,47 +226,25 @@ const getPhotoUrl = (year, month, index) => {
 
 .photo-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1rem;
 }
 .photo-card {
   aspect-ratio: 1;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: linear-gradient(135deg, #1A1A2E, #16213E);
+  background: #1A1A2E;
   transition: transform var(--transition-base);
   cursor: pointer;
 }
 .photo-card:hover {
   transform: scale(1.05);
 }
-.photo-placeholder {
+.photo-img {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.photo-icon {
-  font-size: 2rem;
-  opacity: 0.5;
-}
-
-.gallery-note {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  text-align: center;
-}
-.gallery-note p {
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 0.875rem;
-}
-.gallery-note code {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-sm);
-  color: var(--color-primary-400);
+  object-fit: cover;
+  display: block;
 }
 
 @media (max-width: 768px) {
