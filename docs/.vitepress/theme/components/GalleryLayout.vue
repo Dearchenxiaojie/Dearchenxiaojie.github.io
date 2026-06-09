@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import photosData from '../photos.json'
 
 // 处理照片数据
@@ -17,7 +17,8 @@ const months = computed(() => {
       label: `${parseInt(month)}月`,
       photos: yearData[month].map(filename => ({
         src: `/gallery/${activeYear.value}/${activeYear.value}-${month}/${filename}`,
-        name: filename
+        name: filename,
+        loaded: false
       }))
     }))
 })
@@ -31,6 +32,31 @@ const totalPhotos = computed(() => {
     })
   })
   return count
+})
+
+// 加载状态
+const isLoading = ref(true)
+const loadedCount = ref(0)
+const loadingProgress = computed(() => {
+  if (totalPhotos.value === 0) return 0
+  return Math.round((loadedCount.value / totalPhotos.value) * 100)
+})
+
+// 图片加载完成回调
+const onImageLoad = () => {
+  loadedCount.value++
+  if (loadedCount.value >= totalPhotos.value) {
+    setTimeout(() => {
+      isLoading.value = false
+    }, 500)
+  }
+}
+
+// 模拟初始加载
+onMounted(() => {
+  setTimeout(() => {
+    isLoading.value = false
+  }, 2000)
 })
 </script>
 
@@ -53,6 +79,24 @@ const totalPhotos = computed(() => {
         </nav>
       </div>
     </header>
+
+    <!-- 加载提示侧边栏 -->
+    <aside class="loading-sidebar" :class="{ 'is-visible': isLoading }">
+      <div class="loading-content">
+        <div class="loading-icon">
+          <div class="spinner"></div>
+        </div>
+        <h3>加载照片中</h3>
+        <p class="loading-desc">共 {{ totalPhotos }} 张照片</p>
+        <div class="loading-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" :style="{ width: loadingProgress + '%' }"></div>
+          </div>
+          <span class="progress-text">{{ loadingProgress }}%</span>
+        </div>
+        <p class="loading-hint">照片较多，请耐心等待...</p>
+      </div>
+    </aside>
 
     <!-- Hero -->
     <section class="gallery-hero">
@@ -84,12 +128,17 @@ const totalPhotos = computed(() => {
             v-for="(photo, index) in monthData.photos"
             :key="photo.name"
             class="photo-card"
+            :class="{ 'is-loaded': photo.loaded }"
           >
+            <div class="photo-placeholder" v-if="!photo.loaded">
+              <div class="photo-spinner"></div>
+            </div>
             <img
               :src="photo.src"
               :alt="photo.name"
               loading="lazy"
               class="photo-img"
+              @load="photo.loaded = true; onImageLoad()"
             />
           </div>
         </div>
@@ -105,6 +154,7 @@ const totalPhotos = computed(() => {
   color: #E8E6E3;
 }
 
+/* 导航栏 */
 .navbar {
   position: sticky;
   top: 0;
@@ -157,6 +207,94 @@ const totalPhotos = computed(() => {
   border-radius: 1px;
 }
 
+/* 加载提示侧边栏 */
+.loading-sidebar {
+  position: fixed;
+  left: -320px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 300px;
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 16px 16px 0;
+  padding: 2rem;
+  z-index: 999;
+  transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+}
+
+.loading-sidebar.is-visible {
+  left: 0;
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.loading-icon {
+  margin-bottom: 1.5rem;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #FFD700;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-content h3 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.loading-desc {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1.5rem;
+}
+
+.loading-progress {
+  margin-bottom: 1rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FFD700, #FFA500);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #FFD700;
+}
+
+.loading-hint {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Hero */
 .gallery-hero {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -198,6 +336,7 @@ const totalPhotos = computed(() => {
   color: white;
 }
 
+/* 照片内容区 */
 .gallery-content {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -224,6 +363,7 @@ const totalPhotos = computed(() => {
   color: rgba(255, 255, 255, 0.5);
 }
 
+/* 照片网格 */
 .photo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -234,12 +374,39 @@ const totalPhotos = computed(() => {
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: #1A1A2E;
-  transition: transform var(--transition-base);
+  transition: transform var(--transition-base), opacity 0.5s ease;
   cursor: pointer;
+  position: relative;
+  opacity: 0;
 }
+
+.photo-card.is-loaded {
+  opacity: 1;
+}
+
 .photo-card:hover {
   transform: scale(1.05);
 }
+
+/* 照片占位符 */
+.photo-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1A1A2E, #16213E);
+}
+
+.photo-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #FFD700;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
 .photo-img {
   width: 100%;
   height: 100%;
@@ -247,10 +414,16 @@ const totalPhotos = computed(() => {
   display: block;
 }
 
+/* 响应式 */
 @media (max-width: 768px) {
   .navbar-menu { display: none; }
   .gallery-hero { padding: 3rem 1rem 2rem; }
   .gallery-hero h1 { font-size: 1.75rem; }
   .photo-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+
+  .loading-sidebar {
+    width: 260px;
+    padding: 1.5rem;
+  }
 }
 </style>
