@@ -14,14 +14,14 @@
 .about-hero {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: var(--space-20) var(--space-6) var(--space-10);
+  padding: var(--space-16) var(--space-2) var(--space-2);
   text-align: center;
 }
 
 .about-avatar {
   width: 160px;
   height: 160px;
-  margin: 0 auto var(--space-8);
+  margin: 0 auto var(--space-2);
   border-radius: 50%;
   background: linear-gradient(135deg, var(--color-primary-lightest), #F5E6CC);
   display: flex;
@@ -36,7 +36,7 @@
   font-family: var(--font-display);
   font-size: var(--text-4xl);
   font-weight: 400;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
 }
 
 .about-name {
@@ -47,8 +47,8 @@
 /* 卡片通用样式 */
 .about-card {
   max-width: 800px;
-  margin: 0 auto var(--space-8);
-  padding: var(--space-10);
+  margin: 0 auto var(--space-2);
+  padding: var(--space-2);
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -61,8 +61,8 @@
   font-family: var(--font-serif);
   font-size: var(--text-2xl);
   font-weight: 600;
-  margin-bottom: var(--space-6);
-  padding-left: var(--space-4);
+  margin-bottom: var(--space-2);
+  padding-left: var(--space-2);
   border-left: 4px solid var(--color-primary);
   color: var(--text-primary);
 }
@@ -77,7 +77,7 @@
 /* 时间线 */
 .timeline {
   position: relative;
-  padding-left: var(--space-10);
+  padding-left: var(--space-2);
 }
 
 .timeline::before {
@@ -93,7 +93,7 @@
 
 .timeline-item {
   position: relative;
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-2);
   animation: fadeInLeft var(--transition-slow) forwards;
   opacity: 0;
 }
@@ -105,7 +105,7 @@
 
 .timeline-dot {
   position: absolute;
-  left: calc(-1 * var(--space-10) + 10px);
+  left: calc(-1 * var(--space-2) + 10px);
   top: 6px;
   width: 14px;
   height: 14px;
@@ -116,7 +116,7 @@
 
 .timeline-content {
   display: flex;
-  gap: var(--space-4);
+  gap: var(--space-2);
   align-items: baseline;
 }
 
@@ -137,11 +137,11 @@
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-6);
+  gap: var(--space-2);
 }
 
 .skill-card {
-  padding: var(--space-8);
+  padding: var(--space-2);
   background: rgba(255, 255, 255, 0.6);
   border-radius: var(--radius-xl);
   text-align: center;
@@ -159,14 +159,14 @@
 .skill-icon {
   font-size: 48px;
   display: block;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-2);
 }
 
 .skill-card h3 {
   font-family: var(--font-serif);
   font-size: var(--text-xl);
   font-weight: 600;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-2);
   color: var(--text-primary);
 }
 
@@ -190,15 +190,15 @@
 .contact-grid {
   display: flex;
   justify-content: center;
-  gap: var(--space-6);
+  gap: var(--space-2);
   flex-wrap: wrap;
 }
 
 .contact-card {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-4) var(--space-6);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2);
   background: rgba(255, 255, 255, 0.6);
   border-radius: var(--radius-xl);
   text-decoration: none;
@@ -227,8 +227,8 @@
 /* 页脚 */
 .about-footer {
   text-align: center;
-  padding: var(--space-10) var(--space-6);
-  margin-top: var(--space-10);
+  padding: var(--space-2) var(--space-2);
+  margin-top: var(--space-2);
 }
 
 .about-footer p {
@@ -240,7 +240,7 @@
 /* 响应式 */
 @media (max-width: 768px) {
   .about-hero {
-    padding: var(--space-10) var(--space-4) var(--space-8);
+    padding: var(--space-2) var(--space-2) var(--space-2);
   }
 
   .about-avatar {
@@ -254,8 +254,8 @@
   }
 
   .about-card {
-    padding: var(--space-6);
-    margin: 0 var(--space-4) var(--space-6);
+    padding: var(--space-2);
+    margin: 0 var(--space-2) var(--space-2);
   }
 
   .skills-grid {
