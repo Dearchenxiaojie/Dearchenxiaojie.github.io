@@ -1,9 +1,37 @@
 <script setup>
 import { useData } from 'vitepress'
+import { ref } from 'vue'
 import { data as posts } from '../posts.data.mjs'
 
 const { site, frontmatter } = useData()
 const recentPosts = posts.slice(0, 3)
+
+// 代码复制功能
+const copyStatus = ref('')
+const codeContent = `from datetime import datetime
+
+class Life:
+    def __init__(self):
+        self.mood = "😊"
+        self.today = "写了一个爬虫"
+
+me = Life()
+print(f"{me.mood} {me.today}")`
+
+const copyCode = async () => {
+  try {
+    await navigator.clipboard.writeText(codeContent)
+    copyStatus.value = '已复制!'
+    setTimeout(() => {
+      copyStatus.value = ''
+    }, 2000)
+  } catch (err) {
+    copyStatus.value = '复制失败'
+    setTimeout(() => {
+      copyStatus.value = ''
+    }, 2000)
+  }
+}
 </script>
 
 <template>
@@ -147,7 +175,7 @@ const recentPosts = posts.slice(0, 3)
             <span class="dot green"></span>
           </div>
           <span class="code-filename">life.py</span>
-          <button class="copy-btn">复制</button>
+          <button class="copy-btn" @click="copyCode">{{ copyStatus || '复制' }}</button>
         </div>
         <pre><code>from datetime import datetime
 
