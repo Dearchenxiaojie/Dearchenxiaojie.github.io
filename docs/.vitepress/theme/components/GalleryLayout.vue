@@ -34,30 +34,14 @@ const totalPhotos = computed(() => {
   return count
 })
 
-// 加载状态
-const isLoading = ref(true)
+// 加载状态 - 优化：立即显示页面，不阻塞
+const isLoading = ref(false)  // 改为 false，不显示加载提示
 const loadedCount = ref(0)
-const loadingProgress = computed(() => {
-  if (totalPhotos.value === 0) return 0
-  return Math.round((loadedCount.value / totalPhotos.value) * 100)
-})
 
-// 图片加载完成回调
+// 图片加载完成回调 - 静默处理
 const onImageLoad = () => {
   loadedCount.value++
-  if (loadedCount.value >= totalPhotos.value) {
-    setTimeout(() => {
-      isLoading.value = false
-    }, 500)
-  }
 }
-
-// 模拟初始加载
-onMounted(() => {
-  setTimeout(() => {
-    isLoading.value = false
-  }, 2000)
-})
 </script>
 
 <template>
@@ -79,12 +63,6 @@ onMounted(() => {
         </nav>
       </div>
     </header>
-
-    <!-- 加载提示 -->
-    <div class="loading-notice" v-if="isLoading">
-      <span class="loading-dot"></span>
-      <span>照片加载中，请稍候...</span>
-    </div>
 
     <!-- Hero -->
     <section class="gallery-hero">
@@ -125,6 +103,7 @@ onMounted(() => {
               :src="photo.src"
               :alt="photo.name"
               loading="lazy"
+              decoding="async"
               class="photo-img"
               @load="photo.loaded = true; onImageLoad()"
             />
@@ -193,43 +172,6 @@ onMounted(() => {
   height: 2px;
   background: var(--color-primary-500);
   border-radius: 1px;
-}
-
-/* 加载提示 */
-.loading-notice {
-  position: fixed;
-  top: var(--nav-height);
-  left: 0;
-  right: 0;
-  z-index: 999;
-  background: rgba(26, 26, 46, 0.9);
-  backdrop-filter: blur(10px);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.7);
-  animation: fadeIn 0.3s ease;
-}
-
-.loading-dot {
-  width: 8px;
-  height: 8px;
-  background: #FFD700;
-  border-radius: 50%;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.8); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Hero */

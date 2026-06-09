@@ -81,7 +81,7 @@ const getPostIcon = (tags) => {
         <article v-for="post in recentPosts" :key="post.url" class="post-card">
           <a :href="post.url">
             <div class="post-cover">
-              <img v-if="post.cover" :src="post.cover" :alt="post.title" loading="lazy" />
+              <img v-if="post.cover" :src="post.cover" :alt="post.title" loading="lazy" decoding="async" />
               <span v-else>{{ getPostIcon(post.tags) }}</span>
             </div>
             <div class="post-body">
@@ -112,19 +112,19 @@ const getPostIcon = (tags) => {
       </div>
       <div class="gallery-grid">
         <div class="gallery-item large">
-          <img src="/gallery/2025/2025-06/IMG_20250615_131559.jpg" alt="2025年6月" loading="lazy" />
+          <img src="/gallery/2025/2025-06/IMG_20250615_131559.jpg" alt="2025年6月" loading="lazy" decoding="async" />
         </div>
         <div class="gallery-item">
-          <img src="/gallery/2025/2025-06/IMG_20250615_131708.jpg" alt="2025年6月" loading="lazy" />
+          <img src="/gallery/2025/2025-06/IMG_20250615_131708.jpg" alt="2025年6月" loading="lazy" decoding="async" />
         </div>
         <div class="gallery-item">
-          <img src="/gallery/2025/2025-06/IMG_20250615_131802.jpg" alt="2025年6月" loading="lazy" />
+          <img src="/gallery/2025/2025-06/IMG_20250615_131802.jpg" alt="2025年6月" loading="lazy" decoding="async" />
         </div>
         <div class="gallery-item">
-          <img src="/gallery/2025/2025-06/IMG_20250615_131935.jpg" alt="2025年6月" loading="lazy" />
+          <img src="/gallery/2025/2025-06/IMG_20250615_131935.jpg" alt="2025年6月" loading="lazy" decoding="async" />
         </div>
         <div class="gallery-item">
-          <img src="/gallery/2025/2025-06/IMG_20250615_132557.jpg" alt="2025年6月" loading="lazy" />
+          <img src="/gallery/2025/2025-06/IMG_20250615_132557.jpg" alt="2025年6月" loading="lazy" decoding="async" />
         </div>
       </div>
     </section>

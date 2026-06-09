@@ -11,7 +11,39 @@ export default defineConfig({
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:title', content: '云上日志' }],
     ['meta', { property: 'og:description', content: '数据在云上，生活在日志里' }],
+    // 预连接到常用CDN
+    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+    ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
   ],
+
+  // 性能优化配置
+  vite: {
+    build: {
+      // 代码分割
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vue': ['vue'],
+            'vitepress': ['vitepress']
+          }
+        }
+      },
+      // 压缩
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true
+        }
+      }
+    },
+    // 开发服务器优化
+    server: {
+      hmr: {
+        overlay: false
+      }
+    }
+  },
 
   themeConfig: {
     logo: '/logo.svg',
@@ -37,6 +69,9 @@ export default defineConfig({
 
     search: {
       provider: 'local'
-    }
+    },
+
+    // 图片懒加载
+    lastUpdated: false
   }
 })
