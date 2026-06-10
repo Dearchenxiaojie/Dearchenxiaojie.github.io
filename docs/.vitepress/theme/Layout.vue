@@ -5,6 +5,8 @@ import { computed } from 'vue'
 import HomeLayout from './components/HomeLayout.vue'
 import GalleryLayout from './components/GalleryLayout.vue'
 import AboutLayout from './components/AboutLayout.vue'
+import ToolsLayout from './components/ToolsLayout.vue'
+import SavesLayout from './components/SavesLayout.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
 
 const { Layout: VitePressLayout } = DefaultTheme
@@ -15,7 +17,9 @@ const pageStyle = computed(() => {
   if (path === '/' || path === '/index.html') return 'home'
   if (path.startsWith('/gallery')) return 'gallery'
   if (path.startsWith('/about')) return 'about'
-  if (path.startsWith('/posts') || path.startsWith('/tools') || path.startsWith('/saves')) return 'posts'
+  if (path.startsWith('/tools')) return 'tools'
+  if (path.startsWith('/saves')) return 'saves'
+  if (path.startsWith('/posts')) return 'posts'
   return 'home'
 })
 </script>
@@ -30,6 +34,12 @@ const pageStyle = computed(() => {
 
     <!-- 关于页：自定义布局 -->
     <AboutLayout v-else-if="pageStyle === 'about'" />
+
+    <!-- 工具页：自定义布局 -->
+    <ToolsLayout v-else-if="pageStyle === 'tools'" />
+
+    <!-- 存档页：自定义布局 -->
+    <SavesLayout v-else-if="pageStyle === 'saves'" />
 
     <!-- 文章页和其他：使用 VitePress 默认布局 -->
     <VitePressLayout v-else />
