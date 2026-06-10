@@ -12,7 +12,8 @@ export default createContentLoader('posts/*.md', {
         readingTime: Math.max(1, Math.ceil((excerpt?.length || 0) / 500)),
         url,
         tags: frontmatter.tags || [],
-        cover: frontmatter.cover || ''
+        cover: frontmatter.cover || '',
+        coverText: frontmatter.coverText || frontmatter.title
       }))
       .sort((a, b) => new Date(b.date) - new Date(a.date))
   }

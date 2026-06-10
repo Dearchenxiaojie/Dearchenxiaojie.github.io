@@ -114,8 +114,7 @@ const getPostIcon = (tags) => {
         <article v-for="post in recentPosts" :key="post.url" class="post-card">
           <a :href="post.url">
             <div class="post-cover">
-              <img v-if="post.cover" :src="post.cover" :alt="post.title" loading="lazy" decoding="async" />
-              <span v-else>{{ getPostIcon(post.tags) }}</span>
+              <div class="cover-text">{{ post.coverText }}</div>
             </div>
             <div class="post-body">
               <div class="post-meta">
@@ -403,13 +402,19 @@ const getPostIcon = (tags) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
+  padding: 1.5rem;
   overflow: hidden;
 }
-.post-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.cover-text {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .post-body {
   padding: 1.5rem;

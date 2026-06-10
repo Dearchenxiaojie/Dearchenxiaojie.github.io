@@ -3,7 +3,7 @@ title: GitHub 入门指南：从注册到使用
 date: 2026-06-09
 description: 详细介绍 GitHub 的注册、使用方法，以及国内访问加速方案
 tags: [GitHub, 工具, 教程]
-cover: https://images.unsplash.com/photo-1618401471353-b98afee0b2b5?w=800&h=400&fit=crop
+coverText: "GitHub\n全球最大的代码托管平台"
 ---
 
 # GitHub 入门指南：从注册到使用
