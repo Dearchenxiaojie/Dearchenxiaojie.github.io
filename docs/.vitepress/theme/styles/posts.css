@@ -1,5 +1,10 @@
 /* 文章页样式 - 冬·书房风格 */
 
+/* 场景背景 */
+.scene-posts {
+  background: #F5F7FA;
+}
+
 /* VitePress 默认主题覆盖 */
 :root {
   --vp-c-brand: #C4956A;
