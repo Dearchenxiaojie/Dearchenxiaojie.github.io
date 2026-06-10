@@ -18,25 +18,6 @@ export default defineConfig({
 
   // 性能优化配置
   vite: {
-    build: {
-      // 代码分割
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            'vue': ['vue'],
-            'vitepress': ['vitepress']
-          }
-        }
-      },
-      // 压缩
-      minify: 'terser',
-      terserOptions: {
-        compress: {
-          drop_console: true,
-          drop_debugger: true
-        }
-      }
-    },
     // 开发服务器优化
     server: {
       hmr: {
