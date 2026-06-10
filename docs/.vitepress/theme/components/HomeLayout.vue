@@ -1,10 +1,43 @@
 <script setup>
 import { useData } from 'vitepress'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { data as posts } from '../posts.data.mjs'
+import photosData from '../photos.json'
 
 const { site, frontmatter } = useData()
 const recentPosts = posts.slice(0, 3)
+
+// 从 photos.json 获取最新月份的照片
+const galleryPhotos = computed(() => {
+  const photos = []
+  const years = Object.keys(photosData).sort().reverse()
+  if (years.length > 0) {
+    const latestYear = years[0]
+    const months = Object.keys(photosData[latestYear]).sort().reverse()
+    if (months.length > 0) {
+      const latestMonth = months[0]
+      const monthPhotos = photosData[latestYear][latestMonth]
+      monthPhotos.slice(0, 5).forEach(filename => {
+        photos.push({
+          src: `/gallery/${latestYear}/${latestYear}-${latestMonth}/${filename}`,
+          alt: `${latestYear}年${parseInt(latestMonth)}月`
+        })
+      })
+    }
+  }
+  return photos
+})
+
+// 总照片数
+const totalPhotos = computed(() => {
+  let count = 0
+  Object.values(photosData).forEach(yearData => {
+    Object.values(yearData).forEach(monthPhotos => {
+      count += monthPhotos.length
+    })
+  })
+  return count
+})
 
 // 根据文章标签返回图标
 const getPostIcon = (tags) => {
@@ -106,25 +139,13 @@ const getPostIcon = (tags) => {
         <div>
           <span class="section-badge">📷 光影瞬间</span>
           <h2>近期拍摄</h2>
-          <p class="section-desc">用镜头记录生活中的美好</p>
+          <p class="section-desc">共 {{ totalPhotos }} 张照片</p>
         </div>
         <a href="/gallery/" class="view-all">进入相册 →</a>
       </div>
       <div class="gallery-grid">
-        <div class="gallery-item large">
-          <img src="/gallery/2025/2025-06/IMG_20250615_131559.jpg" alt="2025年6月" loading="lazy" decoding="async" />
-        </div>
-        <div class="gallery-item">
-          <img src="/gallery/2025/2025-06/IMG_20250615_131708.jpg" alt="2025年6月" loading="lazy" decoding="async" />
-        </div>
-        <div class="gallery-item">
-          <img src="/gallery/2025/2025-06/IMG_20250615_131802.jpg" alt="2025年6月" loading="lazy" decoding="async" />
-        </div>
-        <div class="gallery-item">
-          <img src="/gallery/2025/2025-06/IMG_20250615_131935.jpg" alt="2025年6月" loading="lazy" decoding="async" />
-        </div>
-        <div class="gallery-item">
-          <img src="/gallery/2025/2025-06/IMG_20250615_132557.jpg" alt="2025年6月" loading="lazy" decoding="async" />
+        <div v-for="(photo, index) in galleryPhotos" :key="index" class="gallery-item">
+          <img :src="photo.src" :alt="photo.alt" loading="lazy" decoding="async" />
         </div>
       </div>
     </section>

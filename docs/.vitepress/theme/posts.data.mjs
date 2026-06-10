@@ -4,8 +4,9 @@ export default createContentLoader('posts/*.md', {
   excerpt: true,
   transform(rawData) {
     return rawData
+      .filter(({ frontmatter }) => frontmatter.title && frontmatter.date)
       .map(({ url, frontmatter, excerpt }) => ({
-        title: frontmatter.title || '无标题',
+        title: frontmatter.title,
         description: frontmatter.description || excerpt?.slice(0, 100) || '',
         date: formatDate(frontmatter.date),
         readingTime: Math.max(1, Math.ceil((excerpt?.length || 0) / 500)),
