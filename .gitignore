@@ -1,0 +1,22 @@
+﻿# 依赖
+node_modules/
+
+# 构建产物
+.vitepress/cache/
+.vitepress/dist/
+
+# 开发脚本
+*.py
+*.sh
+upload-*
+
+# 编辑器
+.vscode/
+.idea/
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# brainstorming 工作目录
+.superpowers/
