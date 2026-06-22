@@ -69,6 +69,11 @@ const getPostIcon = (tags) => {
           <a href="/tools/" class="menu-item">工具</a>
           <a href="/saves/" class="menu-item">存档</a>
           <a href="/about" class="menu-item">关于</a>
+                  <button
+  class="theme-toggle"
+  onclick="document.documentElement.classList.toggle('dark');localStorage.setItem('cloudlog-theme',document.documentElement.classList.contains('dark')?'dark':'light')"
+  aria-label="??????"
+>??</button>
         </nav>
       </div>
     </header>
@@ -617,4 +622,14 @@ const getPostIcon = (tags) => {
   .gallery-item.large { grid-column: span 2; grid-row: span 1; }
   .footer-inner { flex-direction: column; gap: 2.5rem; }
 }
+
+.theme-toggle {
+  background: none; border: none;
+  font-size: 1.125rem; cursor: pointer;
+  padding: 0.25rem; border-radius: var(--radius-md);
+  line-height: 1; margin-left: 0.5rem;
+  transition: background var(--transition-fast);
+}
+.theme-toggle:hover { background: var(--bg-tertiary); }
+
 </style>

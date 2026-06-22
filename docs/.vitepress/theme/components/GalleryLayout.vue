@@ -6,7 +6,7 @@ import photosData from '../photos.json'
 const years = Object.keys(photosData).sort().reverse()
 const activeYear = ref(years[0] || '2025')
 
-// 当前年份的月份列表
+// 当前年份的月份列�?
 const months = computed(() => {
   const yearData = photosData[activeYear.value] || {}
   return Object.keys(yearData)
@@ -34,7 +34,7 @@ const totalPhotos = computed(() => {
   return count
 })
 
-// 加载状态 - 优化：立即显示页面，不阻塞
+// 加载状�?- 优化：立即显示页面，不阻�?
 const isLoading = ref(false)  // 改为 false，不显示加载提示
 const loadedCount = ref(0)
 
@@ -46,7 +46,7 @@ const onImageLoad = () => {
 
 <template>
   <div class="gallery-page">
-    <!-- 导航栏 -->
+    <!-- 导航�?-->
     <header class="navbar">
       <div class="navbar-inner">
         <a href="/" class="navbar-logo">
@@ -60,14 +60,19 @@ const onImageLoad = () => {
           <a href="/tools/" class="menu-item">工具</a>
           <a href="/saves/" class="menu-item">存档</a>
           <a href="/about" class="menu-item">关于</a>
+                  <button
+  class="theme-toggle"
+  onclick="document.documentElement.classList.toggle('dark');localStorage.setItem('cloudlog-theme',document.documentElement.classList.contains('dark')?'dark':'light')"
+  aria-label="??????"
+>??</button>
         </nav>
       </div>
     </header>
 
     <!-- Hero -->
     <section class="gallery-hero">
-      <h1>「每一帧都是限定版的时光」</h1>
-      <p class="gallery-desc">共 {{ totalPhotos }} 张照片 · 记录生活中的美好瞬间</p>
+      <h1>「每一帧都是限定版的时光�?/h1>
+      <p class="gallery-desc">�?{{ totalPhotos }} 张照�?· 记录生活中的美好瞬间</p>
       <div class="gallery-filters">
         <button
           v-for="year in years"
@@ -76,7 +81,7 @@ const onImageLoad = () => {
           :class="{ active: activeYear === year }"
           @click="activeYear = year"
         >
-          {{ year }}年
+          {{ year }}�?
         </button>
       </div>
     </section>
@@ -86,7 +91,7 @@ const onImageLoad = () => {
       <div v-for="monthData in months" :key="monthData.month" class="month-section">
         <div class="month-header">
           <h2>{{ activeYear }}年{{ monthData.label }}</h2>
-          <span class="photo-count">{{ monthData.photos.length }} 张</span>
+          <span class="photo-count">{{ monthData.photos.length }} �?/span>
         </div>
 
         <div class="photo-grid">
@@ -121,7 +126,7 @@ const onImageLoad = () => {
   color: #E8E6E3;
 }
 
-/* 导航栏 */
+/* 导航�?*/
 .navbar {
   position: sticky;
   top: 0;
@@ -216,7 +221,7 @@ const onImageLoad = () => {
   color: white;
 }
 
-/* 照片内容区 */
+/* 照片内容�?*/
 .gallery-content {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -268,7 +273,7 @@ const onImageLoad = () => {
   transform: scale(1.05);
 }
 
-/* 照片占位符 */
+/* 照片占位�?*/
 .photo-placeholder {
   position: absolute;
   inset: 0;
@@ -294,7 +299,7 @@ const onImageLoad = () => {
   display: block;
 }
 
-/* 响应式 */
+/* 响应�?*/
 @media (max-width: 768px) {
   .navbar-menu { display: none; }
   .gallery-hero { padding: 3rem 1rem 2rem; }
@@ -306,4 +311,15 @@ const onImageLoad = () => {
     padding: 1.5rem;
   }
 }
+
+.theme-toggle {
+  background: none; border: none;
+  font-size: 1.125rem; cursor: pointer;
+  padding: 0.25rem; border-radius: var(--radius-md);
+  line-height: 1; margin-left: 0.5rem;
+  transition: background var(--transition-fast);
+}
+.theme-toggle:hover { background: var(--bg-tertiary); }
+.gallery-page .theme-toggle { color: rgba(255, 255, 255, 0.7); }
+
 </style>

@@ -1,10 +1,10 @@
-/* ========== Tailwind CSS 专业配色方案 ========== */
-/* 使用 Tailwind 的 stone + amber 色系，温暖文艺风格 */
+﻿/* ========== Tailwind CSS 涓撲笟閰嶈壊鏂规 ========== */
+/* 浣跨敤 Tailwind 鐨?stone + amber 鑹茬郴锛屾俯鏆栨枃鑹洪鏍?*/
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&family=ZCOOL+XiaoWei&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  /* ========== 主色：Amber（琥珀/暖金色）========== */
+  /* ========== 涓昏壊锛欰mber锛堢惀鐝€/鏆栭噾鑹诧級========== */
   --color-primary-50: #fffbeb;
   --color-primary-100: #fef3c7;
   --color-primary-200: #fde68a;
@@ -17,7 +17,7 @@
   --color-primary-900: #78350f;
   --color-primary-950: #451a03;
 
-  /* ========== 中性色：Stone（石头/暖灰）========== */
+  /* ========== 涓€ц壊锛歋tone锛堢煶澶?鏆栫伆锛?========= */
   --color-stone-50: #fafaf9;
   --color-stone-100: #f5f5f4;
   --color-stone-200: #e7e5e4;
@@ -30,7 +30,7 @@
   --color-stone-900: #1c1917;
   --color-stone-950: #0c0a09;
 
-  /* ========== 辅助色：四季 ========== */
+  /* ========== 杈呭姪鑹诧細鍥涘 ========== */
   --spring-50: #fdf2f8;
   --spring-100: #fce7f3;
   --spring-200: #fbcfe8;
@@ -59,7 +59,7 @@
   --winter-400: #38bdf8;
   --winter-500: #0ea5e9;
 
-  /* ========== 语义色 ========== */
+  /* ========== 璇箟鑹?========== */
   --bg-primary: #fafaf9;
   --bg-secondary: #f5f5f4;
   --bg-tertiary: #e7e5e4;
@@ -76,19 +76,19 @@
   --border-default: #d6d3d1;
   --border-dark: #a8a29e;
 
-  /* ========== 阴影 ========== */
+  /* ========== 闃村奖 ========== */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 
-  /* ========== 字体 ========== */
+  /* ========== 瀛椾綋 ========== */
   --font-sans: 'Noto Sans SC', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-serif: 'Noto Serif SC', ui-serif, Georgia, serif;
   --font-display: 'ZCOOL XiaoWei', cursive;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  /* ========== 间距 ========== */
+  /* ========== 闂磋窛 ========== */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -102,7 +102,7 @@
   --space-20: 5rem;
   --space-24: 6rem;
 
-  /* ========== 圆角 ========== */
+  /* ========== 鍦嗚 ========== */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
@@ -110,18 +110,18 @@
   --radius-2xl: 1.5rem;
   --radius-full: 9999px;
 
-  /* ========== 过渡 ========== */
+  /* ========== 杩囨浮 ========== */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* ========== 布局 ========== */
+  /* ========== 甯冨眬 ========== */
   --max-width: 1280px;
   --content-width: 720px;
   --nav-height: 4rem;
 }
 
-/* ========== 重置 ========== */
+/* ========== 閲嶇疆 ========== */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -240,7 +240,7 @@ th {
   color: var(--text-secondary);
 }
 
-/* ========== 滚动条 ========== */
+/* ========== 婊氬姩鏉?========== */
 ::-webkit-scrollbar {
   width: 0.5rem;
   height: 0.5rem;
@@ -259,13 +259,60 @@ th {
   background: var(--border-dark);
 }
 
-/* ========== 选中文字 ========== */
+/* ========== 閫変腑鏂囧瓧 ========== */
 ::selection {
   background: var(--color-primary-200);
   color: var(--text-primary);
 }
 
-/* ========== 响应式 ========== */
+/* ========== 暗黑模式 ========== */
+:root.dark {
+  --color-primary-50: #451a03;
+  --color-primary-100: #78350f;
+  --color-primary-200: #92400e;
+  --color-primary-300: #b45309;
+  --color-primary-400: #d97706;
+  --color-primary-500: #f59e0b;
+  --color-primary-600: #fbbf24;
+  --color-primary-700: #fcd34d;
+  --color-primary-800: #fde68a;
+  --color-primary-900: #fef3c7;
+  --color-primary-950: #fffbeb;
+
+  --bg-primary: #1c1917;
+  --bg-secondary: #292524;
+  --bg-tertiary: #44403c;
+  --bg-card: #292524;
+  --bg-code: #0c0a09;
+
+  --text-primary: #fafaf9;
+  --text-secondary: #d6d3d1;
+  --text-tertiary: #a8a29e;
+  --text-inverse: #1c1917;
+  --text-link: #fbbf24;
+
+  --border-light: #44403c;
+  --border-default: #57534e;
+  --border-dark: #78716c;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.5);
+
+  --color-stone-50: #1c1917;
+  --color-stone-100: #292524;
+  --color-stone-200: #44403c;
+  --color-stone-300: #57534e;
+  --color-stone-400: #78716c;
+  --color-stone-500: #a8a29e;
+  --color-stone-600: #d6d3d1;
+  --color-stone-700: #e7e5e4;
+  --color-stone-800: #f5f5f4;
+  --color-stone-900: #fafaf9;
+  --color-stone-950: #fafaf9;
+}
+/* ========== 鍝嶅簲寮?========== */
 @media (max-width: 768px) {
   :root {
     --nav-height: 3.5rem;

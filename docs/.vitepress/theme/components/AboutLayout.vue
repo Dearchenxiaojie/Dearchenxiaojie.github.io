@@ -16,6 +16,11 @@
           <a href="/posts/" class="menu-item">文章</a>
           <a href="/gallery/" class="menu-item">相册</a>
           <a href="/about" class="menu-item active">关于</a>
+                  <button
+  class="theme-toggle"
+  onclick="document.documentElement.classList.toggle('dark');localStorage.setItem('cloudlog-theme',document.documentElement.classList.contains('dark')?'dark':'light')"
+  aria-label="??????"
+>??</button>
         </nav>
       </div>
     </header>
@@ -116,3 +121,14 @@
     </footer>
   </div>
 </template>
+
+<style scoped>
+.theme-toggle {
+  background: none; border: none;
+  font-size: 1.125rem; cursor: pointer;
+  padding: 0.25rem; border-radius: var(--radius-md);
+  line-height: 1; margin-left: 0.5rem;
+  transition: background var(--transition-fast);
+}
+.theme-toggle:hover { background: var(--bg-tertiary); }
+</style>

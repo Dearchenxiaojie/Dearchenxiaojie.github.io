@@ -1,7 +1,7 @@
-<script setup>
+﻿<script setup>
 import { useData, useRoute } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
-import { computed } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import HomeLayout from './components/HomeLayout.vue'
 import GalleryLayout from './components/GalleryLayout.vue'
 import AboutLayout from './components/AboutLayout.vue'
@@ -11,6 +11,36 @@ import MusicPlayer from './components/MusicPlayer.vue'
 
 const { Layout: VitePressLayout } = DefaultTheme
 const route = useRoute()
+
+// ????
+function initTheme() {
+  const saved = localStorage.getItem("cloudlog-theme")
+  if (saved === "dark") {
+    document.documentElement.classList.add("dark")
+  } else if (saved === "light") {
+    document.documentElement.classList.remove("dark")
+  } else {
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+    if (prefersDark) document.documentElement.classList.add("dark")
+  }
+}
+
+// ?????
+const readingProgress = ref(0)
+function updateProgress() {
+  const scrollTop = window.scrollY
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight
+  readingProgress.value = docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0
+}
+
+onMounted(() => {
+  initTheme()
+  window.addEventListener("scroll", updateProgress)
+})
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", updateProgress)
+})
 
 const pageStyle = computed(() => {
   const path = route.path
@@ -26,25 +56,28 @@ const pageStyle = computed(() => {
 
 <template>
   <div class="cloudlog-app" :class="`scene-${pageStyle}`">
-    <!-- 首页：自定义布局 -->
+    <!-- ????? - ?????? -->
+    <div v-if="pageStyle === 'posts'" class="reading-progress"
+         :style="{ width: readingProgress * 100 + '%' }"></div>
+    <!-- 棣栭〉锛氳嚜瀹氫箟甯冨眬 -->
     <HomeLayout v-if="pageStyle === 'home'" />
 
-    <!-- 相册页：自定义布局 -->
+    <!-- 鐩稿唽椤碉細鑷畾涔夊竷灞€ -->
     <GalleryLayout v-else-if="pageStyle === 'gallery'" />
 
-    <!-- 关于页：自定义布局 -->
+    <!-- 鍏充簬椤碉細鑷畾涔夊竷灞€ -->
     <AboutLayout v-else-if="pageStyle === 'about'" />
 
-    <!-- 工具页：自定义布局 -->
+    <!-- 宸ュ叿椤碉細鑷畾涔夊竷灞€ -->
     <ToolsLayout v-else-if="pageStyle === 'tools'" />
 
-    <!-- 存档页：自定义布局 -->
+    <!-- 瀛樻。椤碉細鑷畾涔夊竷灞€ -->
     <SavesLayout v-else-if="pageStyle === 'saves'" />
 
-    <!-- 文章页和其他：使用 VitePress 默认布局 -->
+    <!-- 鏂囩珷椤靛拰鍏朵粬锛氫娇鐢?VitePress 榛樿甯冨眬 -->
     <VitePressLayout v-else />
 
-    <!-- 全局音乐播放器 -->
+    <!-- 鍏ㄥ眬闊充箰鎾斁鍣?-->
     <MusicPlayer />
   </div>
 </template>
@@ -55,24 +88,46 @@ const pageStyle = computed(() => {
   transition: background 0.5s ease;
 }
 
-/* 首页：大融合 - 暖白底 */
+/* 棣栭〉锛氬ぇ铻嶅悎 - 鏆栫櫧搴?*/
 .scene-home {
   background: linear-gradient(135deg, #FFF5F7 0%, #F0F8FF 33%, #FFF8F0 66%, #F5F7FA 100%);
 }
 
-/* 文章页：冬·书房 - 冰蓝白 */
+/* 鏂囩珷椤碉細鍐蜂功鎴?- 鍐拌摑鐧?*/
 .scene-posts {
   background: #F5F7FA;
 }
 
-/* 相册页：夜·展厅 - 深蓝黑 */
+/* 鐩稿唽椤碉細澶溌峰睍鍘?- 娣辫摑榛?*/
 .scene-gallery {
   background: #0F0F23;
   color: #E8E6E3;
 }
 
-/* 关于页：秋·咖啡馆 - 奶茶色 */
+/* 鍏充簬椤碉細绉嬄峰挅鍟￠ - 濂惰尪鑹?*/
 .scene-about {
   background: linear-gradient(135deg, #FFF8F0 0%, #FDE8D0 50%, #F5D5B8 100%);
 }
+
+/* 深色模式场景背景 */
+:root.dark .scene-home {
+  background: linear-gradient(135deg, #292524 0%, #1c1917 33%, #292524 66%, #1c1917 100%);
+}
+:root.dark .scene-posts { background: #0f172a; }
+:root.dark .scene-about {
+  background: linear-gradient(135deg, #292524 0%, #44403c 50%, #292524 100%);
+}
+
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--color-primary-500);
+  z-index: 10000;
+  transition: width 0.1s linear;
+  border-radius: 0 2px 2px 0;
+}
+
 </style>
+
