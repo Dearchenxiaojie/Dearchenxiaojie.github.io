@@ -149,7 +149,11 @@ const getPostIcon = (tags) => {
       </div>
       <div class="gallery-grid">
         <div v-for="(photo, index) in galleryPhotos" :key="index" class="gallery-item">
-          <img :src="photo.src" :alt="photo.alt" loading="lazy" decoding="async" />
+          <div class="gallery-item" style="aspect-ratio:4/3;overflow:hidden;border-radius:var(--radius-lg);background:var(--bg-tertiary)">
+            <img :src="photo.src" :alt="photo.alt" loading="lazy" decoding="async"
+                 style="width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.3s"
+                 @load="$el.style.opacity='1'" />
+          </div>
         </div>
       </div>
     </section>
@@ -482,6 +486,11 @@ const getPostIcon = (tags) => {
   width: 100%;
   height: auto;
   display: block;
+}
+.gallery-item {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--bg-tertiary);
 }
 
 /* 代码块 */
