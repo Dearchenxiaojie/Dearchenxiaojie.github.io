@@ -7,7 +7,7 @@ import photosData from '../photos.json'
 const { site, frontmatter } = useData()
 const recentPosts = posts.slice(0, 3)
 
-// 从 photos.json 获取最新月份的照片
+// �?photos.json 获取最新月份的照片
 const galleryPhotos = computed(() => {
   const photos = []
   const years = Object.keys(photosData).sort().reverse()
@@ -20,7 +20,7 @@ const galleryPhotos = computed(() => {
       monthPhotos.slice(0, 5).forEach(filename => {
         photos.push({
           src: `/gallery/${latestYear}/${latestYear}-${latestMonth}/${filename}`,
-          alt: `${latestYear}年${parseInt(latestMonth)}月`
+          alt: `${latestYear}�?{parseInt(latestMonth)}月`
         })
       })
     }
@@ -55,14 +55,14 @@ const getPostIcon = (tags) => {
 
 <template>
   <div class="home-page">
-    <!-- 导航栏 -->
+    <!-- 导航�?-->
     <header class="navbar">
       <div class="navbar-inner">
         <a href="/" class="navbar-logo">
           <span class="logo-icon">☁️</span>
           <span class="logo-text">云上日志</span>
         </a>
-        <nav class="navbar-menu">
+        <nav class="navbar-menu" aria-label="������">
           <a href="/" class="menu-item active">首页</a>
           <a href="/posts/" class="menu-item">文章</a>
           <a href="/gallery/" class="menu-item">相册</a>
@@ -83,14 +83,14 @@ const getPostIcon = (tags) => {
       <div class="hero-content">
         <div class="hero-badge">
           <span class="badge-dot"></span>
-          <span>欢迎来到我的小天地</span>
+          <span>欢迎来到我的小天�?/span>
         </div>
         <h1 class="hero-title">
           <span>用数据的思维</span>
-          <span class="highlight">记录生活的温度</span>
+          <span class="highlight">记录生活的温�?/span>
         </h1>
         <p class="hero-desc">
-          你好，我是 Dearchenxiaojie 👋<br>
+          你好，我�?Dearchenxiaojie 👋<br>
           热爱折腾 · 喜欢分享 · 记录生活点滴
         </p>
         <div class="hero-actions">
@@ -105,15 +105,15 @@ const getPostIcon = (tags) => {
       </div>
     </section>
 
-    <!-- 最新文章 -->
+    <!-- 最新文�?-->
     <section class="section">
       <div class="section-header">
         <div>
-          <span class="section-badge">📝 最新发布</span>
+          <span class="section-badge">📝 最新发�?/span>
           <h2>近期文章</h2>
-          <p class="section-desc">分享学习心得与生活感悟</p>
+          <p class="section-desc">分享学习心得与生活感�?/p>
         </div>
-        <a href="/posts/" class="view-all">查看全部 →</a>
+        <a href="/posts/" class="view-all">查看全部 �?/a>
       </div>
       <div class="posts-grid">
         <article v-for="post in recentPosts" :key="post.url" class="post-card">
@@ -143,9 +143,9 @@ const getPostIcon = (tags) => {
         <div>
           <span class="section-badge">📷 光影瞬间</span>
           <h2>近期拍摄</h2>
-          <p class="section-desc">共 {{ totalPhotos }} 张照片</p>
+          <p class="section-desc">�?{{ totalPhotos }} 张照�?/p>
         </div>
-        <a href="/gallery/" class="view-all">进入相册 →</a>
+        <a href="/gallery/" class="view-all">进入相册 �?/a>
       </div>
       <div class="gallery-grid">
         <div v-for="(photo, index) in galleryPhotos" :key="index" class="gallery-item">
@@ -164,7 +164,7 @@ const getPostIcon = (tags) => {
         <div class="footer-brand">
           <span class="footer-logo">☁️</span>
           <span class="footer-name">云上日志</span>
-          <p>用热爱记录每一天</p>
+          <p>用热爱记录每一�?/p>
         </div>
         <div class="footer-links">
           <div>
@@ -182,14 +182,14 @@ const getPostIcon = (tags) => {
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© 2026 云上日志 · 用 ❤️ 构建</p>
+        <p>© 2026 云上日志 · �?❤️ 构建</p>
       </div>
     </footer>
   </div>
 </template>
 
 <style scoped>
-/* 导航栏 */
+/* 导航�?*/
 .navbar {
   position: sticky;
   top: 0;
@@ -466,7 +466,7 @@ const getPostIcon = (tags) => {
   font-weight: 500;
 }
 
-/* 相册预览 - 瀑布流 */
+/* 相册预览 - 瀑布�?*/
 .gallery-grid {
   columns: 3;
   column-gap: 12px;
@@ -493,7 +493,7 @@ const getPostIcon = (tags) => {
   background: var(--bg-tertiary);
 }
 
-/* 代码块 */
+/* 代码�?*/
 .code-block {
   max-width: 36rem;
   margin: 0 auto;
@@ -609,7 +609,7 @@ const getPostIcon = (tags) => {
   font-size: 0.875rem;
 }
 
-/* 响应式 */
+/* 响应�?*/
 @media (max-width: 1024px) {
   .hero {
     grid-template-columns: 1fr;

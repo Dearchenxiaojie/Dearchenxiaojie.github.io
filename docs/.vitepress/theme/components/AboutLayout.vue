@@ -3,7 +3,7 @@
 
 <template>
   <div class="about-page">
-    <!-- 导航栏 -->
+    <!-- 导航�?-->
     <header class="navbar">
       <div class="navbar-inner">
         <a href="/" class="navbar-logo">
@@ -11,7 +11,7 @@
           <span class="logo-text">云上日志</span>
         </a>
 
-        <nav class="navbar-menu">
+        <nav class="navbar-menu" aria-label="������">
           <a href="/" class="menu-item">首页</a>
           <a href="/posts/" class="menu-item">文章</a>
           <a href="/gallery/" class="menu-item">相册</a>
@@ -29,24 +29,24 @@
     <section class="about-hero">
       <div class="about-avatar">📷</div>
       <h1>你好呀 👋</h1>
-      <p class="about-name">我是 Dearchenxiaojie，很高兴认识你</p>
+      <p class="about-name">我是 Dearchenxiaojie，很高兴认识�?/p>
     </section>
 
-    <!-- 关于我 -->
+    <!-- 关于�?-->
     <section class="about-card">
-      <h2>关于我</h2>
-      <p>「我是一个大数据专业的学生，喜欢用代码解决问题，也喜欢用镜头记录生活。这个博客是我的小天地，记录那些值得被记住的瞬间。」</p>
+      <h2>关于�?/h2>
+      <p>「我是一个大数据专业的学生，喜欢用代码解决问题，也喜欢用镜头记录生活。这个博客是我的小天地，记录那些值得被记住的瞬间。�?/p>
     </section>
 
-    <!-- 时间线 -->
+    <!-- 时间�?-->
     <section class="about-card">
-      <h2>我的时间线</h2>
+      <h2>我的时间�?/h2>
       <div class="timeline">
         <div class="timeline-item">
           <div class="timeline-dot"></div>
           <div class="timeline-content">
             <span class="timeline-date">2026.06</span>
-            <span class="timeline-text">创建了「云上日志」博客</span>
+            <span class="timeline-text">创建了「云上日志」博�?/span>
           </div>
         </div>
         <div class="timeline-item">
@@ -66,9 +66,9 @@
       </div>
     </section>
 
-    <!-- 技能/兴趣 -->
+    <!-- 技�?兴趣 -->
     <section class="about-card">
-      <h2>技能 / 兴趣</h2>
+      <h2>技�?/ 兴趣</h2>
       <div class="skills-grid">
         <div class="skill-card">
           <div class="skill-icon">💻</div>
@@ -92,7 +92,7 @@
           <div class="skill-icon">📖</div>
           <h3>阅读</h3>
           <ul class="skill-list">
-            <li>技术</li>
+            <li>技�?/li>
             <li>文学</li>
             <li>写作</li>
           </ul>
@@ -117,7 +117,7 @@
 
     <!-- 页脚 -->
     <footer class="about-footer">
-      <p>© 2026 云上日志 · 用 ❤️ 构建</p>
+      <p>© 2026 云上日志 · �?❤️ 构建</p>
     </footer>
   </div>
 </template>

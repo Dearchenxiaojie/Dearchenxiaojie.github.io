@@ -2,8 +2,8 @@
 const tools = [
   {
     icon: '🎮',
-    name: 'PCL2 启动器',
-    desc: 'Plain Craft Launcher 2 - 我的 Minecraft 启动器',
+    name: 'PCL2 启动�?,
+    desc: 'Plain Craft Launcher 2 - 我的 Minecraft 启动�?,
     link: 'https://afdian.net/a/LTCat',
     tags: ['游戏', 'Minecraft']
   },
@@ -12,21 +12,21 @@ const tools = [
     name: 'GitHub',
     desc: '全球最大的代码托管平台',
     link: 'https://github.com',
-    tags: ['开发', '代码']
+    tags: ['开�?, '代码']
   },
   {
     icon: '💻',
     name: 'VS Code',
     desc: '微软出品的免费代码编辑器',
     link: 'https://code.visualstudio.com',
-    tags: ['开发', '编辑器']
+    tags: ['开�?, '编辑�?]
   },
   {
     icon: '🚀',
     name: 'Watt Toolkit',
-    desc: '免费开源的 GitHub 加速工具',
+    desc: '免费开源的 GitHub 加速工�?,
     link: 'https://steampp.net',
-    tags: ['网络', '加速']
+    tags: ['网络', '加�?]
   }
 ]
 </script>
@@ -39,7 +39,7 @@ const tools = [
           <span class="logo-icon">☁️</span>
           <span class="logo-text">云上日志</span>
         </a>
-        <nav class="navbar-menu">
+        <nav class="navbar-menu" aria-label="������">
           <a href="/" class="menu-item">首页</a>
           <a href="/posts/" class="menu-item">文章</a>
           <a href="/gallery/" class="menu-item">相册</a>
@@ -57,7 +57,7 @@ const tools = [
 
     <section class="tools-hero">
       <h1>🔧 工具推荐</h1>
-      <p>我日常使用的好用工具和软件</p>
+      <p>我日常使用的好用工具和软�?/p>
     </section>
 
     <section class="tools-content">
@@ -71,7 +71,7 @@ const tools = [
               <span v-for="tag in tool.tags" :key="tag" class="tag">#{{ tag }}</span>
             </div>
           </div>
-          <div class="tool-arrow">→</div>
+          <div class="tool-arrow">�?/div>
         </a>
       </div>
     </section>

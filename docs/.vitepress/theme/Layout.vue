@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { useData, useRoute } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { computed, ref, onMounted, onUnmounted } from 'vue'
@@ -7,7 +7,6 @@ import GalleryLayout from './components/GalleryLayout.vue'
 import AboutLayout from './components/AboutLayout.vue'
 import ToolsLayout from './components/ToolsLayout.vue'
 import SavesLayout from './components/SavesLayout.vue'
-import MusicPlayer from './components/MusicPlayer.vue'
 
 const { Layout: VitePressLayout } = DefaultTheme
 const route = useRoute()
@@ -59,26 +58,25 @@ const pageStyle = computed(() => {
     <!-- ????? - ?????? -->
     <div v-if="pageStyle === 'posts'" class="reading-progress"
          :style="{ width: readingProgress * 100 + '%' }"></div>
-    <!-- 棣栭〉锛氳嚜瀹氫箟甯冨眬 -->
+    <!-- 首页：自定义布局 -->
     <HomeLayout v-if="pageStyle === 'home'" />
 
-    <!-- 鐩稿唽椤碉細鑷畾涔夊竷灞€ -->
+    <!-- 相册页：自定义布局 -->
     <GalleryLayout v-else-if="pageStyle === 'gallery'" />
 
-    <!-- 鍏充簬椤碉細鑷畾涔夊竷灞€ -->
+    <!-- 关于页：自定义布局 -->
     <AboutLayout v-else-if="pageStyle === 'about'" />
 
-    <!-- 宸ュ叿椤碉細鑷畾涔夊竷灞€ -->
+    <!-- 工具页：自定义布局 -->
     <ToolsLayout v-else-if="pageStyle === 'tools'" />
 
-    <!-- 瀛樻。椤碉細鑷畾涔夊竷灞€ -->
+    <!-- 存档页：自定义布局 -->
     <SavesLayout v-else-if="pageStyle === 'saves'" />
 
-    <!-- 鏂囩珷椤靛拰鍏朵粬锛氫娇鐢?VitePress 榛樿甯冨眬 -->
+    <!-- 文章页和其他：使�?VitePress 默认布局 -->
     <VitePressLayout v-else />
 
-    <!-- 鍏ㄥ眬闊充箰鎾斁鍣?-->
-    <MusicPlayer />
+    <!-- 全局音乐播放�?-->
   </div>
 </template>
 
@@ -88,28 +86,28 @@ const pageStyle = computed(() => {
   transition: background 0.5s ease;
 }
 
-/* 棣栭〉锛氬ぇ铻嶅悎 - 鏆栫櫧搴?*/
+/* 首页：大融合 - 暖白�?*/
 .scene-home {
   background: linear-gradient(135deg, #FFF5F7 0%, #F0F8FF 33%, #FFF8F0 66%, #F5F7FA 100%);
 }
 
-/* 鏂囩珷椤碉細鍐蜂功鎴?- 鍐拌摑鐧?*/
+/* 文章页：冬·书�?- 冰蓝�?*/
 .scene-posts {
   background: #F5F7FA;
 }
 
-/* 鐩稿唽椤碉細澶溌峰睍鍘?- 娣辫摑榛?*/
+/* 相册页：夜·展�?- 深蓝�?*/
 .scene-gallery {
   background: #0F0F23;
   color: #E8E6E3;
 }
 
-/* 鍏充簬椤碉細绉嬄峰挅鍟￠ - 濂惰尪鑹?*/
+/* 关于页：秋·咖啡馆 - 奶茶�?*/
 .scene-about {
   background: linear-gradient(135deg, #FFF8F0 0%, #FDE8D0 50%, #F5D5B8 100%);
 }
 
-/* 深色模式场景背景 */
+/* ��ɫģʽ�������� */
 :root.dark .scene-home {
   background: linear-gradient(135deg, #292524 0%, #1c1917 33%, #292524 66%, #1c1917 100%);
 }

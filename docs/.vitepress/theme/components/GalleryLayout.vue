@@ -1,12 +1,12 @@
-﻿<script setup>
+<script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import photosData from '../photos.json'
 
-// 澶勭悊鐓х墖鏁版嵁
+// 处理照片数据
 const years = Object.keys(photosData).sort().reverse()
 const activeYear = ref(years[0] || '2025')
 
-// 褰撳墠骞翠唤鐨勬湀浠藉垪琛?
+// 当前年份的月份列�?
 const months = computed(() => {
   const yearData = photosData[activeYear.value] || {}
   return Object.keys(yearData)
@@ -14,7 +14,7 @@ const months = computed(() => {
     .reverse()
     .map(month => ({
       month,
-      label: `${parseInt(month)}鏈坄,
+      label: `${parseInt(month)}月`,
       photos: yearData[month].map(filename => ({
         src: `/gallery/${activeYear.value}/${activeYear.value}-${month}/${filename}`,
         name: filename,
@@ -23,7 +23,7 @@ const months = computed(() => {
     }))
 })
 
-// 鎬荤収鐗囨暟
+// 总照片数
 const totalPhotos = computed(() => {
   let count = 0
   Object.values(photosData).forEach(yearData => {
@@ -34,7 +34,7 @@ const totalPhotos = computed(() => {
   return count
 })
 
-// 灯箱状态
+// ����״̬
 const lbOpen = ref(false)
 const lbIndex = ref(0)
 
@@ -66,11 +66,11 @@ function onKey(e) {
 onMounted(() => window.addEventListener("keydown", onKey))
 onUnmounted(() => window.removeEventListener("keydown", onKey))
 
-// 鍔犺浇鐘舵€?- 浼樺寲锛氱珛鍗虫樉绀洪〉闈紝涓嶉樆濉?
-const isLoading = ref(false)  // 鏀逛负 false锛屼笉鏄剧ず鍔犺浇鎻愮ず
+// 加载状�?- 优化：立即显示页面，不阻�?
+const isLoading = ref(false)  // 改为 false，不显示加载提示
 const loadedCount = ref(0)
 
-// 鍥剧墖鍔犺浇瀹屾垚鍥炶皟 - 闈欓粯澶勭悊
+// 图片加载完成回调 - 静默处理
 const onImageLoad = () => {
   loadedCount.value++
 }
@@ -78,20 +78,20 @@ const onImageLoad = () => {
 
 <template>
   <div class="gallery-page">
-    <!-- 瀵艰埅鏍?-->
+    <!-- 导航�?-->
     <header class="navbar">
       <div class="navbar-inner">
         <a href="/" class="navbar-logo">
-          <span class="logo-icon">鈽侊笍</span>
-          <span class="logo-text">浜戜笂鏃ュ織</span>
+          <span class="logo-icon">☁️</span>
+          <span class="logo-text">云上日志</span>
         </a>
-        <nav class="navbar-menu">
-          <a href="/" class="menu-item">棣栭〉</a>
-          <a href="/posts/" class="menu-item">鏂囩珷</a>
-          <a href="/gallery/" class="menu-item active">鐩稿唽</a>
-          <a href="/tools/" class="menu-item">宸ュ叿</a>
-          <a href="/saves/" class="menu-item">瀛樻。</a>
-          <a href="/about" class="menu-item">鍏充簬</a>
+        <nav class="navbar-menu" aria-label="������">
+          <a href="/" class="menu-item">首页</a>
+          <a href="/posts/" class="menu-item">文章</a>
+          <a href="/gallery/" class="menu-item active">相册</a>
+          <a href="/tools/" class="menu-item">工具</a>
+          <a href="/saves/" class="menu-item">存档</a>
+          <a href="/about" class="menu-item">关于</a>
                   <button
   class="theme-toggle"
   onclick="document.documentElement.classList.toggle('dark');localStorage.setItem('cloudlog-theme',document.documentElement.classList.contains('dark')?'dark':'light')"
@@ -103,8 +103,8 @@ const onImageLoad = () => {
 
     <!-- Hero -->
     <section class="gallery-hero">
-      <h1>銆屾瘡涓€甯ч兘鏄檺瀹氱増鐨勬椂鍏夈€?/h1>
-      <p class="gallery-desc">鍏?{{ totalPhotos }} 寮犵収鐗?路 璁板綍鐢熸椿涓殑缇庡ソ鐬棿</p>
+      <h1>「每一帧都是限定版的时光�?/h1>
+      <p class="gallery-desc">�?{{ totalPhotos }} 张照�?· 记录生活中的美好瞬间</p>
       <div class="gallery-filters">
         <button
           v-for="year in years"
@@ -113,17 +113,17 @@ const onImageLoad = () => {
           :class="{ active: activeYear === year }"
           @click="activeYear = year"
         >
-          {{ year }}骞?
+          {{ year }}�?
         </button>
       </div>
     </section>
 
-    <!-- 鐓х墖鍒楄〃 -->
+    <!-- 照片列表 -->
     <section class="gallery-content">
       <div v-for="(monthData, monthIndex) in months" :key="monthData.month" class="month-section">
         <div class="month-header">
-          <h2>{{ activeYear }}骞磠{ monthData.label }}</h2>
-          <span class="photo-count">{{ monthData.photos.length }} 寮?/span>
+          <h2>{{ activeYear }}年{{ monthData.label }}</h2>
+          <span class="photo-count">{{ monthData.photos.length }} �?/span>
         </div>
 
         <div class="photo-grid">
@@ -152,16 +152,16 @@ const onImageLoad = () => {
       </div>
     </section>
   </div>
-    <!-- 灯箱 -->
+    <!-- ���� -->
     <Teleport to="body">
       <div v-if="lbOpen" class="lightbox-overlay" @click.self="closeLB">
-        <button class="lightbox-close" @click="closeLB">✕</button>
-        <button v-if="lbIndex>0" class="lightbox-nav lightbox-prev" @click="prevLB">‹</button>
+        <button class="lightbox-close" @click="closeLB">?</button>
+        <button v-if="lbIndex>0" class="lightbox-nav lightbox-prev" @click="prevLB">?</button>
         <div class="lightbox-content">
           <img :src="allPhotos[lbIndex].src" :alt="allPhotos[lbIndex].name" class="lightbox-image" />
           <p class="lightbox-caption">{{ allPhotos[lbIndex].name }}</p>
         </div>
-        <button v-if="lbIndex<allPhotos.length-1" class="lightbox-nav lightbox-next" @click="nextLB">›</button>
+        <button v-if="lbIndex<allPhotos.length-1" class="lightbox-nav lightbox-next" @click="nextLB">?</button>
       </div>
     </Teleport></template>
 
@@ -172,7 +172,7 @@ const onImageLoad = () => {
   color: #E8E6E3;
 }
 
-/* 瀵艰埅鏍?*/
+/* 导航�?*/
 .navbar {
   position: sticky;
   top: 0;
@@ -267,7 +267,7 @@ const onImageLoad = () => {
   color: white;
 }
 
-/* 鐓х墖鍐呭鍖?*/
+/* 照片内容�?*/
 .gallery-content {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -294,7 +294,7 @@ const onImageLoad = () => {
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* 鐓х墖缃戞牸 */
+/* 照片网格 */
 .photo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -319,7 +319,7 @@ const onImageLoad = () => {
   transform: scale(1.05);
 }
 
-/* 鐓х墖鍗犱綅绗?*/
+/* 照片占位�?*/
 .photo-placeholder {
   position: absolute;
   inset: 0;
@@ -345,7 +345,7 @@ const onImageLoad = () => {
   display: block;
 }
 
-/* 鍝嶅簲寮?*/
+/* 响应�?*/
 @media (max-width: 768px) {
   .navbar-menu { display: none; }
   .gallery-hero { padding: 3rem 1rem 2rem; }
