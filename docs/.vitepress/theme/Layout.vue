@@ -11,7 +11,7 @@ import SavesLayout from './components/SavesLayout.vue'
 const { Layout: VitePressLayout } = DefaultTheme
 const route = useRoute()
 
-// ????
+// 初始化主题
 function initTheme() {
   const saved = localStorage.getItem("cloudlog-theme")
   if (saved === "dark") {
@@ -24,7 +24,7 @@ function initTheme() {
   }
 }
 
-// ?????
+// 阅读进度
 const readingProgress = ref(0)
 function updateProgress() {
   const scrollTop = window.scrollY
@@ -55,7 +55,7 @@ const pageStyle = computed(() => {
 
 <template>
   <div class="cloudlog-app" :class="`scene-${pageStyle}`">
-    <!-- ????? - ?????? -->
+    <!-- 阅读进度条 - 仅文章页 -->
     <div v-if="pageStyle === 'posts'" class="reading-progress"
          :style="{ width: readingProgress * 100 + '%' }"></div>
     <!-- 首页：自定义布局 -->
@@ -73,10 +73,10 @@ const pageStyle = computed(() => {
     <!-- 存档页：自定义布局 -->
     <SavesLayout v-else-if="pageStyle === 'saves'" />
 
-    <!-- 文章页和其他：使�?VitePress 默认布局 -->
+    <!-- 文章页和其他：使用 VitePress 默认布局 -->
     <VitePressLayout v-else />
 
-    <!-- 全局音乐播放�?-->
+    <!-- 全局音乐播放器 -->
   </div>
 </template>
 
@@ -86,28 +86,28 @@ const pageStyle = computed(() => {
   transition: background 0.5s ease;
 }
 
-/* 首页：大融合 - 暖白�?*/
+/* 首页：大融合 - 暖白底 */
 .scene-home {
   background: linear-gradient(135deg, #FFF5F7 0%, #F0F8FF 33%, #FFF8F0 66%, #F5F7FA 100%);
 }
 
-/* 文章页：冬·书�?- 冰蓝�?*/
+/* 文章页：冬·书房 - 冰蓝白 */
 .scene-posts {
   background: #F5F7FA;
 }
 
-/* 相册页：夜·展�?- 深蓝�?*/
+/* 相册页：夜·展厅 - 深蓝黑 */
 .scene-gallery {
   background: #0F0F23;
   color: #E8E6E3;
 }
 
-/* 关于页：秋·咖啡馆 - 奶茶�?*/
+/* 关于页：秋·咖啡馆 - 奶茶色 */
 .scene-about {
   background: linear-gradient(135deg, #FFF8F0 0%, #FDE8D0 50%, #F5D5B8 100%);
 }
 
-/* ��ɫģʽ�������� */
+/* 深色模式场景背景 */
 :root.dark .scene-home {
   background: linear-gradient(135deg, #292524 0%, #1c1917 33%, #292524 66%, #1c1917 100%);
 }
@@ -128,4 +128,3 @@ const pageStyle = computed(() => {
 }
 
 </style>
-
