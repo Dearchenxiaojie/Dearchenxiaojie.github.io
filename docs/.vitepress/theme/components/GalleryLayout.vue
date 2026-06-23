@@ -6,7 +6,7 @@ import photosData from '../photos.json'
 const years = Object.keys(photosData).sort().reverse()
 const activeYear = ref(years[0] || '2025')
 
-// 当前年份的月份列�?
+// 当前年份的月份列表
 const months = computed(() => {
   const yearData = photosData[activeYear.value] || {}
   return Object.keys(yearData)
@@ -34,7 +34,7 @@ const totalPhotos = computed(() => {
   return count
 })
 
-// ����״̬
+// 灯箱状态
 const lbOpen = ref(false)
 const lbIndex = ref(0)
 
@@ -66,7 +66,7 @@ function onKey(e) {
 onMounted(() => window.addEventListener("keydown", onKey))
 onUnmounted(() => window.removeEventListener("keydown", onKey))
 
-// 加载状�?- 优化：立即显示页面，不阻�?
+// 加载状态 - 优化：立即显示页面，不阻塞
 const isLoading = ref(false)  // 改为 false，不显示加载提示
 const loadedCount = ref(0)
 
@@ -78,14 +78,14 @@ const onImageLoad = () => {
 
 <template>
   <div class="gallery-page">
-    <!-- 导航�?-->
+    <!-- 导航栏 -->
     <header class="navbar">
       <div class="navbar-inner">
         <a href="/" class="navbar-logo">
           <span class="logo-icon">☁️</span>
           <span class="logo-text">云上日志</span>
         </a>
-        <nav class="navbar-menu" aria-label="������">
+        <nav class="navbar-menu" aria-label="主导航">
           <a href="/" class="menu-item">首页</a>
           <a href="/posts/" class="menu-item">文章</a>
           <a href="/gallery/" class="menu-item active">相册</a>
@@ -95,16 +95,16 @@ const onImageLoad = () => {
                   <button
   class="theme-toggle"
   onclick="document.documentElement.classList.toggle('dark');localStorage.setItem('cloudlog-theme',document.documentElement.classList.contains('dark')?'dark':'light')"
-  aria-label="??????"
->??</button>
+  aria-label="切换主题"
+>🌓</button>
         </nav>
       </div>
     </header>
 
     <!-- Hero -->
     <section class="gallery-hero">
-      <h1>「每一帧都是限定版的时光�?/h1>
-      <p class="gallery-desc">�?{{ totalPhotos }} 张照�?· 记录生活中的美好瞬间</p>
+      <h1>「每一帧都是限定版的时光」</h1>
+      <p class="gallery-desc">共 {{ totalPhotos }} 张照片 · 记录生活中的美好瞬间</p>
       <div class="gallery-filters">
         <button
           v-for="year in years"
@@ -113,7 +113,7 @@ const onImageLoad = () => {
           :class="{ active: activeYear === year }"
           @click="activeYear = year"
         >
-          {{ year }}�?
+          {{ year }}年
         </button>
       </div>
     </section>
@@ -123,7 +123,7 @@ const onImageLoad = () => {
       <div v-for="(monthData, monthIndex) in months" :key="monthData.month" class="month-section">
         <div class="month-header">
           <h2>{{ activeYear }}年{{ monthData.label }}</h2>
-          <span class="photo-count">{{ monthData.photos.length }} �?/span>
+          <span class="photo-count">{{ monthData.photos.length }} 张</span>
         </div>
 
         <div class="photo-grid">
@@ -133,35 +133,21 @@ const onImageLoad = () => {
             class="photo-card"
             :class="{ 'is-loaded': photo.loaded }"
           >
-            <div class="photo-placeholder" v-if="!photo.loaded">
-              <div class="photo-spinner"></div>
-            </div>
-            <img
-              :src="photo.src"
-              :alt="photo.name"
-              loading="lazy"
-              decoding="async"
-              class="photo-img"
-              @load="photo.loaded = true; onImageLoad()"
-          @click="openLB(monthOffsets[monthIndex] + index)"
-          @click="openLB(monthOffsets[monthIndex] + index)"
-          @click="openLB(monthOffsets[monthIndex] + index)"
-            />
           </div>
         </div>
       </div>
     </section>
   </div>
-    <!-- ���� -->
+    <!-- 灯箱 -->
     <Teleport to="body">
       <div v-if="lbOpen" class="lightbox-overlay" @click.self="closeLB">
-        <button class="lightbox-close" @click="closeLB">?</button>
-        <button v-if="lbIndex>0" class="lightbox-nav lightbox-prev" @click="prevLB">?</button>
+        <button class="lightbox-close" @click="closeLB">✕</button>
+        <button v-if="lbIndex>0" class="lightbox-nav lightbox-prev" @click="prevLB">‹</button>
         <div class="lightbox-content">
           <img :src="allPhotos[lbIndex].src" :alt="allPhotos[lbIndex].name" class="lightbox-image" />
           <p class="lightbox-caption">{{ allPhotos[lbIndex].name }}</p>
         </div>
-        <button v-if="lbIndex<allPhotos.length-1" class="lightbox-nav lightbox-next" @click="nextLB">?</button>
+        <button v-if="lbIndex<allPhotos.length-1" class="lightbox-nav lightbox-next" @click="nextLB">›</button>
       </div>
     </Teleport></template>
 
@@ -172,7 +158,7 @@ const onImageLoad = () => {
   color: #E8E6E3;
 }
 
-/* 导航�?*/
+/* 导航栏 */
 .navbar {
   position: sticky;
   top: 0;
@@ -267,7 +253,7 @@ const onImageLoad = () => {
   color: white;
 }
 
-/* 照片内容�?*/
+/* 照片内容区 */
 .gallery-content {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -319,7 +305,7 @@ const onImageLoad = () => {
   transform: scale(1.05);
 }
 
-/* 照片占位�?*/
+/* 照片占位符 */
 .photo-placeholder {
   position: absolute;
   inset: 0;
@@ -345,7 +331,7 @@ const onImageLoad = () => {
   display: block;
 }
 
-/* 响应�?*/
+/* 响应式 */
 @media (max-width: 768px) {
   .navbar-menu { display: none; }
   .gallery-hero { padding: 3rem 1rem 2rem; }
@@ -369,7 +355,3 @@ const onImageLoad = () => {
 .gallery-page .theme-toggle { color: rgba(255, 255, 255, 0.7); }
 
 </style>
-
-
-
-
