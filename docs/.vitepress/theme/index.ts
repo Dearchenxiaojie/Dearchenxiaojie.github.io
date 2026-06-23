@@ -6,7 +6,6 @@ import './styles/home.css'
 import './styles/posts.css'
 import './styles/gallery.css'
 import './styles/about.css'
-import './styles/music-player.css'
 import './styles/animations.css'
 
 export default {
