@@ -4,7 +4,7 @@ const saves = [
     icon: '🎮',
     name: 'Minecraft 存档',
     desc: '我的 Minecraft 游戏存档分享',
-    count: '待添�?,
+    count: '待添加',
     tags: ['Minecraft', '游戏']
   }
 ]
@@ -18,7 +18,7 @@ const saves = [
           <span class="logo-icon">☁️</span>
           <span class="logo-text">云上日志</span>
         </a>
-        <nav class="navbar-menu" aria-label="������">
+        <nav class="navbar-menu" aria-label="主导航">
           <a href="/" class="menu-item">首页</a>
           <a href="/posts/" class="menu-item">文章</a>
           <a href="/gallery/" class="menu-item">相册</a>
@@ -28,15 +28,15 @@ const saves = [
                   <button
   class="theme-toggle"
   onclick="document.documentElement.classList.toggle('dark');localStorage.setItem('cloudlog-theme',document.documentElement.classList.contains('dark')?'dark':'light')"
-  aria-label="??????"
->??</button>
+  aria-label="切换主题"
+>🌓</button>
         </nav>
       </div>
     </header>
 
     <section class="saves-hero">
       <h1>🎮 存档分享</h1>
-      <p>我的游戏存档和地�?/p>
+      <p>我的游戏存档和地图</p>
     </section>
 
     <section class="saves-content">
