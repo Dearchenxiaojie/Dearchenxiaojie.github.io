@@ -121,9 +121,9 @@ function toggleTheme() {
             <img
               :src="photo.src"
               :alt="photo.name"
-              loading="lazy"
               decoding="async"
               class="photo-img"
+              @error="$el.src = $el.src"
             />
           </div>
         </div>
