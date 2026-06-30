@@ -44,15 +44,6 @@ const allPhotos = computed(() => {
   return list
 })
 
-const monthOffsets = computed(() => {
-  let offset = 0
-  return months.value.map(m => {
-    const result = offset
-    offset += m.photos.length
-    return result
-  })
-})
-
 function openLB(i) { lbIndex.value = i; lbOpen.value = true }
 function closeLB() { lbOpen.value = false }
 function prevLB() { if (lbIndex.value > 0) lbIndex.value-- }
@@ -66,13 +57,20 @@ function onKey(e) {
 onMounted(() => window.addEventListener("keydown", onKey))
 onUnmounted(() => window.removeEventListener("keydown", onKey))
 
-// 加载状态 - 优化：立即显示页面，不阻塞
-const isLoading = ref(false)  // 改为 false，不显示加载提示
-const loadedCount = ref(0)
+// 计算月份偏移量，用于灯箱全局索引
+const monthOffsets = computed(() => {
+  let offset = 0
+  return months.value.map(m => {
+    const result = offset
+    offset += m.photos.length
+    return result
+  })
+})
 
-// 图片加载完成回调 - 静默处理
-const onImageLoad = () => {
-  loadedCount.value++
+// 主题切换
+function toggleTheme() {
+  document.documentElement.classList.toggle('dark')
+  localStorage.setItem('cloudlog-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light')
 }
 </script>
 
@@ -92,11 +90,11 @@ const onImageLoad = () => {
           <a href="/tools/" class="menu-item">工具</a>
           <a href="/saves/" class="menu-item">存档</a>
           <a href="/about" class="menu-item">关于</a>
-                  <button
-  class="theme-toggle"
-  onclick="document.documentElement.classList.toggle('dark');localStorage.setItem('cloudlog-theme',document.documentElement.classList.contains('dark')?'dark':'light')"
-  aria-label="切换主题"
->🌓</button>
+          <button
+            class="theme-toggle"
+            @click="toggleTheme"
+            aria-label="切换主题"
+          >🌓</button>
         </nav>
       </div>
     </header>
@@ -132,24 +130,38 @@ const onImageLoad = () => {
             :key="photo.name"
             class="photo-card"
             :class="{ 'is-loaded': photo.loaded }"
+            @click="openLB(index + (monthOffsets[monthIndex] || 0))"
           >
+            <img
+              :src="photo.src"
+              :alt="photo.name"
+              loading="lazy"
+              decoding="async"
+              class="photo-img"
+              @load="photo.loaded = true"
+            />
+            <div v-if="!photo.loaded" class="photo-placeholder">
+              <div class="photo-spinner"></div>
+            </div>
           </div>
         </div>
       </div>
     </section>
-  </div>
+
     <!-- 灯箱 -->
     <Teleport to="body">
       <div v-if="lbOpen" class="lightbox-overlay" @click.self="closeLB">
         <button class="lightbox-close" @click="closeLB">✕</button>
-        <button v-if="lbIndex>0" class="lightbox-nav lightbox-prev" @click="prevLB">‹</button>
+        <button v-if="lbIndex > 0" class="lightbox-nav lightbox-prev" @click="prevLB">‹</button>
         <div class="lightbox-content">
           <img :src="allPhotos[lbIndex].src" :alt="allPhotos[lbIndex].name" class="lightbox-image" />
           <p class="lightbox-caption">{{ allPhotos[lbIndex].name }}</p>
         </div>
-        <button v-if="lbIndex<allPhotos.length-1" class="lightbox-nav lightbox-next" @click="nextLB">›</button>
+        <button v-if="lbIndex < allPhotos.length - 1" class="lightbox-nav lightbox-next" @click="nextLB">›</button>
       </div>
-    </Teleport></template>
+    </Teleport>
+  </div>
+</template>
 
 <style scoped>
 .gallery-page {
@@ -185,10 +197,12 @@ const onImageLoad = () => {
   font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 600;
+  text-decoration: none;
 }
 .navbar-menu {
   display: flex;
   gap: 2rem;
+  align-items: center;
 }
 .menu-item {
   color: rgba(255, 255, 255, 0.7);
@@ -196,6 +210,7 @@ const onImageLoad = () => {
   font-weight: 500;
   padding: 0.5rem 0;
   position: relative;
+  text-decoration: none;
 }
 .menu-item:hover, .menu-item.active {
   color: white;
@@ -209,6 +224,22 @@ const onImageLoad = () => {
   height: 2px;
   background: var(--color-primary-500);
   border-radius: 1px;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.125rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: var(--radius-md);
+  line-height: 1;
+  margin-left: 0.5rem;
+  transition: background var(--transition-fast);
+  color: rgba(255, 255, 255, 0.7);
+}
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Hero */
@@ -305,6 +336,13 @@ const onImageLoad = () => {
   transform: scale(1.05);
 }
 
+.photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 /* 照片占位符 */
 .photo-placeholder {
   position: absolute;
@@ -324,34 +362,98 @@ const onImageLoad = () => {
   animation: spin 1s linear infinite;
 }
 
-.photo-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 灯箱 */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1.25rem;
+  border: none;
+  cursor: pointer;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 2rem;
+  border: none;
+  cursor: pointer;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.lightbox-nav:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+.lightbox-prev {
+  left: 1.5rem;
+}
+.lightbox-next {
+  right: 1.5rem;
+}
+.lightbox-content {
+  max-width: 90vw;
+  max-height: 85vh;
+  text-align: center;
+}
+.lightbox-image {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 0.5rem;
+}
+.lightbox-caption {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
 }
 
 /* 响应式 */
 @media (max-width: 768px) {
-  .navbar-menu { display: none; }
-  .gallery-hero { padding: 3rem 1rem 2rem; }
-  .gallery-hero h1 { font-size: 1.75rem; }
-  .photo-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-
-  .loading-sidebar {
-    width: 260px;
-    padding: 1.5rem;
+  .navbar-menu {
+    display: none;
+  }
+  .gallery-hero {
+    padding: 3rem 1rem 2rem;
+  }
+  .gallery-hero h1 {
+    font-size: 1.75rem;
+  }
+  .photo-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }
-
-.theme-toggle {
-  background: none; border: none;
-  font-size: 1.125rem; cursor: pointer;
-  padding: 0.25rem; border-radius: var(--radius-md);
-  line-height: 1; margin-left: 0.5rem;
-  transition: background var(--transition-fast);
-}
-.theme-toggle:hover { background: var(--bg-tertiary); }
-.gallery-page .theme-toggle { color: rgba(255, 255, 255, 0.7); }
-
 </style>
