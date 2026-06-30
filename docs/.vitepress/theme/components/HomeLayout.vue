@@ -1,13 +1,13 @@
 <script setup>
-import { useData } from 'vitepress'
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { data as posts } from '../posts.data.mjs'
 import photosData from '../photos.json'
+import NavBar from './NavBar.vue'
+import Footer from './Footer.vue'
 
-const { site, frontmatter } = useData()
 const recentPosts = posts.slice(0, 3)
 
-// �?photos.json 获取最新月份的照片
+// 从 photos.json 获取最新月份的照片
 const galleryPhotos = computed(() => {
   const photos = []
   const years = Object.keys(photosData).sort().reverse()
@@ -17,10 +17,10 @@ const galleryPhotos = computed(() => {
     if (months.length > 0) {
       const latestMonth = months[0]
       const monthPhotos = photosData[latestYear][latestMonth]
-      monthPhotos.slice(0, 5).forEach(filename => {
+      monthPhotos.slice(0, 6).forEach(filename => {
         photos.push({
           src: `/gallery/${latestYear}/${latestYear}-${latestMonth}/${filename}`,
-          alt: `${latestYear}�?{parseInt(latestMonth)}月`
+          alt: `${latestYear}年${parseInt(latestMonth)}月`
         })
       })
     }
@@ -38,82 +38,58 @@ const totalPhotos = computed(() => {
   })
   return count
 })
-
-// 根据文章标签返回图标
-const getPostIcon = (tags) => {
-  if (!tags || tags.length === 0) return '📝'
-  const tag = tags[0].toLowerCase()
-  if (tag.includes('github') || tag.includes('git')) return '🐙'
-  if (tag.includes('工具') || tag.includes('软件')) return '🔧'
-  if (tag.includes('教程') || tag.includes('指南')) return '📚'
-  if (tag.includes('游戏') || tag.includes('minecraft')) return '🎮'
-  if (tag.includes('代码') || tag.includes('编程')) return '💻'
-  if (tag.includes('生活') || tag.includes('日常')) return '🌿'
-  return '📝'
-}
 </script>
 
 <template>
   <div class="home-page">
-    <!-- 导航�?-->
-    <header class="navbar">
-      <div class="navbar-inner">
-        <a href="/" class="navbar-logo">
-          <span class="logo-icon">☁️</span>
-          <span class="logo-text">云上日志</span>
-        </a>
-        <nav class="navbar-menu" aria-label="������">
-          <a href="/" class="menu-item active">首页</a>
-          <a href="/posts/" class="menu-item">文章</a>
-          <a href="/gallery/" class="menu-item">相册</a>
-          <a href="/tools/" class="menu-item">工具</a>
-          <a href="/saves/" class="menu-item">存档</a>
-          <a href="/about" class="menu-item">关于</a>
-                  <button
-  class="theme-toggle"
-  onclick="document.documentElement.classList.toggle('dark');localStorage.setItem('cloudlog-theme',document.documentElement.classList.contains('dark')?'dark':'light')"
-  aria-label="??????"
->??</button>
-        </nav>
-      </div>
-    </header>
+    <!-- 导航栏 -->
+    <NavBar />
 
-    <!-- Hero -->
+    <!-- Hero 区域 -->
     <section class="hero">
-      <div class="hero-content">
-        <div class="hero-badge">
-          <span class="badge-dot"></span>
-          <span>欢迎来到我的小天�?/span>
-        </div>
-        <h1 class="hero-title">
-          <span>用数据的思维</span>
-          <span class="highlight">记录生活的温�?/span>
-        </h1>
-        <p class="hero-desc">
-          你好，我�?Dearchenxiaojie 👋<br>
-          热爱折腾 · 喜欢分享 · 记录生活点滴
-        </p>
-        <div class="hero-actions">
-          <a href="/posts/" class="btn btn-primary">查看文章</a>
-          <a href="/gallery/" class="btn btn-outline">浏览相册</a>
-        </div>
+      <!-- 背景图 -->
+      <div class="hero-bg">
+        <img src="/images/bg-hero.png" alt="" class="hero-bg-img" />
+        <div class="hero-bg-overlay"></div>
       </div>
-      <div class="hero-visual">
-        <div class="visual-card">
-          <img src="/avatar.jpg" alt="头像" class="avatar-img" />
+
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            <span>欢迎来到我的小天地</span>
+          </div>
+          <h1 class="hero-title">
+            <span>用数据的思维</span>
+            <span class="highlight">记录生活的温度</span>
+          </h1>
+          <p class="hero-desc">
+            你好，我是 Dearchenxiaojie 👋<br>
+            热爱折腾 · 喜欢分享 · 记录生活点滴
+          </p>
+          <div class="hero-actions">
+            <a href="/posts/" class="btn btn-primary">查看文章</a>
+            <a href="/gallery/" class="btn btn-outline">浏览相册</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="avatar-wrapper">
+            <div class="avatar-glow"></div>
+            <img src="/avatar.jpg" alt="头像" class="avatar-img" />
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 最新文�?-->
+    <!-- 最新文章 -->
     <section class="section">
       <div class="section-header">
         <div>
-          <span class="section-badge">📝 最新发�?/span>
+          <span class="section-badge">📝 最新发布</span>
           <h2>近期文章</h2>
-          <p class="section-desc">分享学习心得与生活感�?/p>
+          <p class="section-desc">分享学习心得与生活感悟</p>
         </div>
-        <a href="/posts/" class="view-all">查看全部 �?/a>
+        <a href="/posts/" class="view-all">查看全部 →</a>
       </div>
       <div class="posts-grid">
         <article v-for="post in recentPosts" :key="post.url" class="post-card">
@@ -143,502 +119,233 @@ const getPostIcon = (tags) => {
         <div>
           <span class="section-badge">📷 光影瞬间</span>
           <h2>近期拍摄</h2>
-          <p class="section-desc">�?{{ totalPhotos }} 张照�?/p>
+          <p class="section-desc">共 {{ totalPhotos }} 张照片</p>
         </div>
-        <a href="/gallery/" class="view-all">进入相册 �?/a>
+        <a href="/gallery/" class="view-all">进入相册 →</a>
       </div>
       <div class="gallery-grid">
         <div v-for="(photo, index) in galleryPhotos" :key="index" class="gallery-item">
-          <div class="gallery-item" style="aspect-ratio:4/3;overflow:hidden;border-radius:var(--radius-lg);background:var(--bg-tertiary)">
-            <img :src="photo.src" :alt="photo.alt" loading="lazy" decoding="async"
-                 style="width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.3s"
-                 @load="$el.style.opacity='1'" />
-          </div>
+          <img
+            :src="photo.src"
+            :alt="photo.alt"
+            loading="lazy"
+            decoding="async"
+            class="gallery-img"
+          />
         </div>
       </div>
     </section>
 
     <!-- 页脚 -->
-    <footer class="footer">
-      <div class="footer-inner">
-        <div class="footer-brand">
-          <span class="footer-logo">☁️</span>
-          <span class="footer-name">云上日志</span>
-          <p>用热爱记录每一�?/p>
-        </div>
-        <div class="footer-links">
-          <div>
-            <h4>导航</h4>
-            <a href="/">首页</a>
-            <a href="/posts/">文章</a>
-            <a href="/gallery/">相册</a>
-            <a href="/about">关于</a>
-          </div>
-          <div>
-            <h4>社交</h4>
-            <a href="https://github.com/Dearchenxiaojie" target="_blank">GitHub</a>
-            <a href="mailto:2949536466@qq.com">Email</a>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>© 2026 云上日志 · �?❤️ 构建</p>
-      </div>
-    </footer>
+    <Footer />
   </div>
 </template>
 
 <style scoped>
-/* 导航�?*/
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background: rgba(250, 250, 249, 0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-light);
-  height: var(--nav-height);
-}
-.navbar-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  height: 100%;
+.home-page {
+  min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.navbar-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--text-primary);
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-.navbar-menu {
-  display: flex;
-  gap: 2rem;
-}
-.menu-item {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  font-weight: 500;
-  padding: 0.5rem 0;
-  position: relative;
-}
-.menu-item:hover, .menu-item.active {
-  color: var(--text-primary);
-}
-.menu-item.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--color-primary-500);
-  border-radius: 1px;
+  flex-direction: column;
 }
 
-/* Hero */
+/* Hero 区域 */
 .hero {
+  position: relative;
+  padding: var(--space-20) var(--space-6) var(--space-16);
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(250, 250, 248, 0.3) 0%,
+    rgba(250, 250, 248, 0.6) 50%,
+    rgba(250, 250, 248, 0.95) 100%
+  );
+}
+
+:root.dark .hero-bg-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 24, 22, 0.5) 0%,
+    rgba(26, 24, 22, 0.7) 50%,
+    rgba(26, 24, 22, 0.95) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 6rem 1.5rem 4rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-16);
   align-items: center;
-  background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--bg-primary) 50%, var(--autumn-50) 100%);
-  border-radius: var(--radius-2xl);
-  margin-top: 2rem;
 }
+
+.hero-text {
+  max-width: 560px;
+}
+
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.375rem 1rem;
-  background: var(--color-primary-100);
-  color: var(--color-primary-800);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-light);
   border-radius: var(--radius-full);
   font-size: 0.875rem;
   font-weight: 500;
-  margin-bottom: 1.5rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-6);
 }
+
 .badge-dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  background: var(--color-primary-500);
+  width: 8px;
+  height: 8px;
+  background: var(--color-primary);
   border-radius: 50%;
   animation: pulse 2s infinite;
 }
+
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
+
 .hero-title {
-  font-size: 3rem;
+  font-size: 3.5rem;
   line-height: 1.2;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-6);
 }
+
 .hero-title span {
   display: block;
 }
+
 .highlight {
-  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-400));
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
+
 .hero-desc {
   font-size: 1.125rem;
   color: var(--text-secondary);
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-8);
+  line-height: 1.8;
 }
+
 .hero-actions {
   display: flex;
-  gap: 1rem;
+  gap: var(--space-4);
 }
+
 .btn {
   display: inline-flex;
   align-items: center;
-  padding: 0.75rem 1.5rem;
+  justify-content: center;
+  padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-lg);
   font-size: 1rem;
   font-weight: 500;
   transition: all var(--transition-fast);
+  text-decoration: none;
 }
+
 .btn-primary {
-  background: var(--color-primary-600);
+  background: var(--color-primary);
   color: white;
 }
+
 .btn-primary:hover {
-  background: var(--color-primary-700);
+  background: var(--color-primary-dark);
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
   color: white;
 }
+
 .btn-outline {
   border: 2px solid var(--border-default);
   color: var(--text-primary);
 }
+
 .btn-outline:hover {
-  border-color: var(--color-primary-400);
-  color: var(--color-primary-700);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
+
+/* 头像 */
 .hero-visual {
   display: flex;
   justify-content: center;
 }
-.visual-card {
-  width: 100%;
-  max-width: 24rem;
-  aspect-ratio: 4/3;
-  background: linear-gradient(135deg, var(--color-primary-100), var(--color-primary-50));
-  border-radius: var(--radius-2xl);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
+
+.avatar-wrapper {
+  position: relative;
+  width: 280px;
+  height: 280px;
 }
+
+.avatar-glow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(
+    circle,
+    rgba(196, 149, 106, 0.3) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  animation: glow 3s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
 .avatar-img {
+  position: relative;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid var(--bg-card);
+  box-shadow: var(--shadow-xl);
 }
 
-/* 区块 */
+/* 区块通用 */
 .section {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 4rem 1.5rem;
+  padding: var(--space-16) var(--space-6);
 }
+
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 2.5rem;
+  margin-bottom: var(--space-10);
 }
+
 .section-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  background: var(--color-primary-100);
-  color: var(--color-primary-700);
-  border-radius: var(--radius-full);
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 0.75rem;
-}
-.section-desc {
-  color: var(--text-secondary);
-  font-size: 1rem;
-}
-.view-all {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-primary-600);
-}
-
-/* 文章卡片 */
-.posts-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-}
-.post-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-light);
-  transition: all var(--transition-base);
-}
-.post-card:hover {
-  transform: translateY(-0.25rem);
-  box-shadow: var(--shadow-lg);
-}
-.post-card a {
-  color: inherit;
-  display: block;
-}
-.post-cover {
-  height: 12rem;
-  background: linear-gradient(135deg, var(--color-primary-100), var(--bg-secondary));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  overflow: hidden;
-}
-.cover-text {
-  font-family: var(--font-serif);
-  font-size: 1.125rem;
-  line-height: 1.6;
-  color: var(--text-primary);
-  text-align: center;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.post-body {
-  padding: 1.5rem;
-}
-.post-meta {
-  display: flex;
-  gap: 1rem;
-  font-size: 0.875rem;
-  color: var(--text-tertiary);
-  margin-bottom: 0.75rem;
-}
-.post-body h3 {
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.post-body p {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin-bottom: 1rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.post-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-.tag {
-  padding: 0.25rem 0.75rem;
-  background: var(--color-primary-100);
-  color: var(--color-primary-700);
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-/* 相册预览 - 瀑布�?*/
-.gallery-grid {
-  columns: 3;
-  column-gap: 12px;
-}
-.gallery-item {
-  break-inside: avoid;
-  margin-bottom: 12px;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  transition: transform var(--transition-base);
-  cursor: pointer;
-}
-.gallery-item:hover {
-  transform: scale(1.02);
-}
-.gallery-item img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-.gallery-item {
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: var(--bg-tertiary);
-}
-
-/* 代码�?*/
-.code-block {
-  max-width: 36rem;
-  margin: 0 auto;
-  background: var(--bg-code);
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-}
-.code-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-  background: var(--color-stone-950);
-}
-.code-dots {
-  display: flex;
-  gap: 0.375rem;
-}
-.dot {
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 50%;
-}
-.dot.red { background: #ef4444; }
-.dot.yellow { background: #eab308; }
-.dot.green { background: #22c55e; }
-.code-filename {
-  color: var(--color-stone-400);
-  font-size: 0.875rem;
-  font-family: var(--font-mono);
-  flex: 1;
-}
-.copy-btn {
-  padding: 0.25rem 0.75rem;
-  background: rgba(255,255,255,0.1);
-  color: var(--color-stone-400);
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-}
-.code-block pre {
-  margin: 0;
-  padding: 1.25rem;
-  background: transparent;
-}
-
-/* 页脚 */
-.footer {
-  background: var(--color-stone-900);
-  color: var(--text-inverse);
-  padding: 4rem 0 0;
-  margin-top: 4rem;
-}
-.footer-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  gap: 4rem;
-}
-.footer-brand {
-  max-width: 18rem;
-}
-.footer-logo {
-  font-size: 2rem;
-  display: block;
-  margin-bottom: 0.75rem;
-}
-.footer-name {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-.footer-brand p {
-  color: rgba(255,255,255,0.6);
-  font-size: 0.875rem;
-}
-.footer-links {
-  display: flex;
-  gap: 4rem;
-}
-.footer-links div {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-.footer-links h4 {
-  font-family: var(--font-sans);
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: rgba(255,255,255,0.4);
-  margin-bottom: 0.5rem;
-}
-.footer-links a {
-  color: rgba(255,255,255,0.8);
-  font-size: 0.875rem;
-}
-.footer-links a:hover {
-  color: var(--color-primary-400);
-}
-.footer-bottom {
-  margin-top: 3rem;
-  padding: 1.5rem;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  text-align: center;
-}
-.footer-bottom p {
-  color: rgba(255,255,255,0.4);
-  font-size: 0.875rem;
-}
-
-/* 响应�?*/
-@media (max-width: 1024px) {
-  .hero {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-  .hero-visual { display: none; }
-  .posts-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 768px) {
-  .navbar-menu { display: none; }
-  .hero { padding: 3rem 1rem 2rem; }
-  .hero-title { font-size: 2rem; }
-  .hero-stats { flex-direction: row; justify-content: space-around; padding: 1rem; }
-  .stat-divider { width: 2.5rem; height: 1px; }
-  .hero-actions { flex-direction: column; }
-  .btn { justify-content: center; }
-  .posts-grid { grid-template-columns: 1fr; }
-  .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
-  .gallery-item.large { grid-column: span 2; grid-row: span 1; }
-  .footer-inner { flex-direction: column; gap: 2.5rem; }
-}
-
-.theme-toggle {
-  background: none; border: none;
-  font-size: 1.125rem; cursor: pointer;
-  padding: 0.25rem; border-radius: var(--radius-md);
-  line-height: 1; margin-left: 0.5rem;
-  transition: background var(--transition-fast);
-}
-.theme-toggle:hover { background: var(--bg-tertiary); }
-
-</style>
+  display: inline-blo

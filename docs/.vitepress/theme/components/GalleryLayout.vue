@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import photosData from '../photos.json'
+import NavBar from './NavBar.vue'
+import Footer from './Footer.vue'
 
 // 处理照片数据
 const years = Object.keys(photosData).sort().reverse()
@@ -76,28 +78,13 @@ function toggleTheme() {
 
 <template>
   <div class="gallery-page">
-    <!-- 导航栏 -->
-    <header class="navbar">
-      <div class="navbar-inner">
-        <a href="/" class="navbar-logo">
-          <span class="logo-icon">☁️</span>
-          <span class="logo-text">云上日志</span>
-        </a>
-        <nav class="navbar-menu" aria-label="主导航">
-          <a href="/" class="menu-item">首页</a>
-          <a href="/posts/" class="menu-item">文章</a>
-          <a href="/gallery/" class="menu-item active">相册</a>
-          <a href="/tools/" class="menu-item">工具</a>
-          <a href="/saves/" class="menu-item">存档</a>
-          <a href="/about" class="menu-item">关于</a>
-          <button
-            class="theme-toggle"
-            @click="toggleTheme"
-            aria-label="切换主题"
-          >🌓</button>
-        </nav>
-      </div>
-    </header>
+    <NavBar />
+
+    <!-- 背景图 -->
+    <div class="gallery-bg">
+      <img src="/images/bg-gallery.png" alt="" class="gallery-bg-img" />
+      <div class="gallery-bg-overlay"></div>
+    </div>
 
     <!-- Hero -->
     <section class="gallery-hero">
@@ -148,6 +135,8 @@ function toggleTheme() {
       </div>
     </section>
 
+    <Footer />
+
     <!-- 灯箱 -->
     <Teleport to="body">
       <div v-if="lbOpen" class="lightbox-overlay" @click.self="closeLB">
@@ -168,82 +157,32 @@ function toggleTheme() {
   min-height: 100vh;
   background: #0F0F1A;
   color: #E8E6E3;
-}
-
-/* 导航栏 */
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background: rgba(15, 15, 26, 0.9);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  height: var(--nav-height);
-}
-.navbar-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.navbar-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: white;
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 600;
-  text-decoration: none;
-}
-.navbar-menu {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-}
-.menu-item {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.875rem;
-  font-weight: 500;
-  padding: 0.5rem 0;
   position: relative;
-  text-decoration: none;
-}
-.menu-item:hover, .menu-item.active {
-  color: white;
-}
-.menu-item.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--color-primary-500);
-  border-radius: 1px;
 }
 
-.theme-toggle {
-  background: none;
-  border: none;
-  font-size: 1.125rem;
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: var(--radius-md);
-  line-height: 1;
-  margin-left: 0.5rem;
-  transition: background var(--transition-fast);
-  color: rgba(255, 255, 255, 0.7);
+/* 背景图 */
+.gallery-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
 }
-.theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.1);
+
+.gallery-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 15, 26, 0.7);
 }
 
 /* Hero */
 .gallery-hero {
+  position: relative;
+  z-index: 1;
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 5rem 1.5rem 3rem;
@@ -443,9 +382,6 @@ function toggleTheme() {
 
 /* 响应式 */
 @media (max-width: 768px) {
-  .navbar-menu {
-    display: none;
-  }
   .gallery-hero {
     padding: 3rem 1rem 2rem;
   }
@@ -455,5 +391,12 @@ function toggleTheme() {
   .photo-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
+}
+
+/* 确保内容在背景图之上 */
+.gallery-content,
+.gallery-hero {
+  position: relative;
+  z-index: 1;
 }
 </style>
