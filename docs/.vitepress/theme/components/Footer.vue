@@ -18,7 +18,8 @@ const socialLinks = [
   <footer class="site-footer">
     <!-- 云纹过渡 -->
     <div class="footer-cloud-transition">
-      <img src="/images/bg-footer.png" alt="" class="footer-cloud-img" />
+      <div class="footer-cloud-fallback"></div>
+      <img src="/images/bg-footer.png" alt="" class="footer-cloud-img" @load="$el.classList.add('loaded')" />
     </div>
 
     <div class="footer-content">
@@ -77,13 +78,32 @@ const socialLinks = [
   height: 120px;
   overflow: hidden;
   line-height: 0;
+  position: relative;
+}
+
+.footer-cloud-fallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, var(--bg-page) 0%, #2D2926 100%);
+}
+
+:root.dark .footer-cloud-fallback {
+  background: linear-gradient(to bottom, var(--bg-page) 0%, #1A1816 100%);
 }
 
 .footer-cloud-img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: top;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.footer-cloud-img.loaded {
+  opacity: 1;
 }
 
 /* 页脚内容 */

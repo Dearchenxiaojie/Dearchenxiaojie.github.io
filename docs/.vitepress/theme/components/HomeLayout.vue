@@ -43,7 +43,8 @@ const totalPhotos = computed(() => {
     <NavBar />
     <section class="hero">
       <div class="hero-bg">
-        <img src="/images/bg-hero.png" alt="" class="hero-bg-img" />
+        <div class="hero-bg-fallback"></div>
+        <img src="/images/bg-hero.png" alt="" class="hero-bg-img" @load="$el.classList.add('loaded')" />
         <div class="hero-bg-overlay"></div>
       </div>
       <div class="hero-content">
@@ -119,7 +120,10 @@ const totalPhotos = computed(() => {
 .home-page { min-height: 100vh; display: flex; flex-direction: column; }
 .hero { position: relative; padding: var(--space-20) var(--space-6) var(--space-16); overflow: hidden; }
 .hero-bg { position: absolute; inset: 0; z-index: 0; }
-.hero-bg-img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.hero-bg-fallback { position: absolute; inset: 0; background: linear-gradient(135deg, #FDF6EE 0%, #FAEBD7 50%, #F5F5F4 100%); }
+:root.dark .hero-bg-fallback { background: linear-gradient(135deg, #292524 0%, #1C1917 50%, #1A1816 100%); }
+.hero-bg-img { width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: 0; transition: opacity 0.8s ease; }
+.hero-bg-img.loaded { opacity: 1; }
 .hero-bg-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(250,250,248,0.3) 0%, rgba(250,250,248,0.6) 50%, rgba(250,250,248,0.95) 100%); }
 :root.dark .hero-bg-overlay { background: linear-gradient(to bottom, rgba(26,24,22,0.5) 0%, rgba(26,24,22,0.7) 50%, rgba(26,24,22,0.95) 100%); }
 .hero-content { position: relative; z-index: 1; max-width: var(--max-width); margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: var(--space-16); align-items: center; }

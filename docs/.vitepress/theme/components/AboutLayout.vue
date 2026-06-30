@@ -9,7 +9,8 @@ import Footer from './Footer.vue'
 
     <!-- 背景图 -->
     <div class="about-bg">
-      <img src="/images/bg-about.png" alt="" class="about-bg-img" />
+      <div class="about-bg-fallback"></div>
+      <img src="/images/bg-about.png" alt="" class="about-bg-img" @load="$el.classList.add('loaded')" />
       <div class="about-bg-overlay"></div>
     </div>
 
@@ -113,10 +114,28 @@ import Footer from './Footer.vue'
   z-index: 0;
 }
 
+.about-bg-fallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #FFF8F0 0%, #FDE8D0 50%, #F5D5B8 100%);
+}
+
+:root.dark .about-bg-fallback {
+  background: linear-gradient(135deg, #292524 0%, #44403C 50%, #292524 100%);
+}
+
 .about-bg-img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.about-bg-img.loaded {
+  opacity: 1;
 }
 
 .about-bg-overlay {

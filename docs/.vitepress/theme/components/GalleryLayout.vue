@@ -81,7 +81,8 @@ function toggleTheme() {
 
     <!-- 背景图 -->
     <div class="gallery-bg">
-      <img src="/images/bg-gallery.png" alt="" class="gallery-bg-img" />
+      <div class="gallery-bg-fallback"></div>
+      <img src="/images/bg-gallery.png" alt="" class="gallery-bg-img" @load="$el.classList.add('loaded')" />
       <div class="gallery-bg-overlay"></div>
     </div>
 
@@ -161,10 +162,24 @@ function toggleTheme() {
   z-index: 0;
 }
 
+.gallery-bg-fallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #0F0F23 0%, #1A1A2E 50%, #0F0F1A 100%);
+}
+
 .gallery-bg-img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.gallery-bg-img.loaded {
+  opacity: 1;
 }
 
 .gallery-bg-overlay {
