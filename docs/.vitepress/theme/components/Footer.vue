@@ -84,11 +84,7 @@ const socialLinks = [
 .footer-cloud-fallback {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, var(--bg-page) 0%, #2D2926 100%);
-}
-
-:root.dark .footer-cloud-fallback {
-  background: linear-gradient(to bottom, var(--bg-page) 0%, #1A1816 100%);
+  background: var(--bg-page);
 }
 
 .footer-cloud-img {
