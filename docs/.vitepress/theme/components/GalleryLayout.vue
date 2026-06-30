@@ -19,8 +19,7 @@ const months = computed(() => {
       label: `${parseInt(month)}月`,
       photos: yearData[month].map(filename => ({
         src: `/gallery/${activeYear.value}/${activeYear.value}-${month}/${filename}`,
-        name: filename,
-        loaded: false
+        name: filename
       }))
     }))
 })
@@ -116,7 +115,6 @@ function toggleTheme() {
             v-for="(photo, index) in monthData.photos"
             :key="photo.name"
             class="photo-card"
-            :class="{ 'is-loaded': photo.loaded }"
             @click="openLB(index + (monthOffsets[monthIndex] || 0))"
           >
             <img
@@ -125,11 +123,7 @@ function toggleTheme() {
               loading="lazy"
               decoding="async"
               class="photo-img"
-              @load="photo.loaded = true"
             />
-            <div v-if="!photo.loaded" class="photo-placeholder">
-              <div class="photo-spinner"></div>
-            </div>
           </div>
         </div>
       </div>
@@ -261,14 +255,9 @@ function toggleTheme() {
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: #1A1A2E;
-  transition: transform var(--transition-base), opacity 0.5s ease;
+  transition: transform var(--transition-base);
   cursor: pointer;
   position: relative;
-  opacity: 0;
-}
-
-.photo-card.is-loaded {
-  opacity: 1;
 }
 
 .photo-card:hover {
@@ -280,29 +269,6 @@ function toggleTheme() {
   height: 100%;
   object-fit: cover;
   display: block;
-}
-
-/* 照片占位符 */
-.photo-placeholder {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #1A1A2E, #16213E);
-}
-
-.photo-spinner {
-  width: 32px;
-  height: 32px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #FFD700;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 /* 灯箱 */
